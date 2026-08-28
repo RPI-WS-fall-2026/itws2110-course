@@ -1,0 +1,23 @@
+# Everything in this project ends up inside a Linux container or a Linux CI
+# runner, so line endings are normalized to LF in the working tree on every
+# platform. Without this, Git for Windows checks scripts out with CRLF and
+# bash fails with:  env: bash\r: No such file or directory
+* text=auto eol=lf
+
+# Belt and braces for the files where CRLF is fatal.
+bin/*        text eol=lf
+*.sh         text eol=lf
+Dockerfile   text eol=lf
+*.yml        text eol=lf
+*.yaml       text eol=lf
+
+# Windows-native helpers must keep CRLF.
+*.ps1        text eol=crlf
+*.bat        text eol=crlf
+
+# Never touch these.
+*.pdf  binary
+*.png  binary
+*.jpg  binary
+*.gif  binary
+*.zip  binary
