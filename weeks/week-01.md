@@ -23,7 +23,7 @@ None this week. The reading starts with [Week 2](week-02.md) — begin it over t
 - [ ] **Clone this repository** — in GitHub Desktop: *File → Clone Repository → URL*, then paste
       `https://github.com/RPI-WS-fall-2026/itws2110-course`
 - [ ] **Do the [Week 2 reading](week-02.md)**
-- [ ] **Install Docker Desktop** — [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/). Install it and confirm it actually starts. It is a large download, so do not leave this to Monday night.
+- [ ] **Install Docker Desktop** — [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)
 - [ ] **Watch for a repository invitation.** You will get one by Tuesday for a private repo where your labs and homework will live. **Accept it and clone that repo too.**
 
 ### On the survey
