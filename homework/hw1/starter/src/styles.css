@@ -1,0 +1,58 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  max-width: 640px;
+  margin: 2em auto;
+  padding: 0 1em;
+  color: #222;
+}
+
+h1 {
+  font-size: 1.5em;
+}
+
+.intro {
+  color: #555;
+}
+
+fieldset {
+  border: 1px solid #999;
+  margin-bottom: 1em;
+}
+
+legend {
+  font-weight: bold;
+}
+
+label {
+  display: inline-block;
+  width: 7em;
+}
+
+.scale .radio,
+label.radio {
+  display: block;
+  width: auto;
+  margin: 2px 0;
+}
+
+.fam label {
+  width: 22em;
+}
+
+input[type="text"],
+textarea,
+select {
+  border: 1px solid #999;
+  padding: 4px;
+}
+
+/* Make the focused field visible */
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+  background-color: #fee;
+}
+
+input[type="submit"] {
+  padding: 6px 14px;
+}

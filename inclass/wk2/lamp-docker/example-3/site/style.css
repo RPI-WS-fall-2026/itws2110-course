@@ -1,0 +1,12 @@
+body {
+  font-family: system-ui, sans-serif;
+  max-width: 40rem;
+  margin: 4rem auto;
+  padding: 0 1rem;
+  line-height: 1.6;
+}
+
+h1 {
+  border-bottom: 2px solid #c00;
+  padding-bottom: 0.3rem;
+}

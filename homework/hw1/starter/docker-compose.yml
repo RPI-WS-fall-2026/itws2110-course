@@ -1,0 +1,17 @@
+# TASK 3 — wire the two tiers together.
+#
+# Two services:
+#
+#   web   built from docker/php-apache/, publishes ${APP_PORT:-8080} to
+#         container port 80, mounts ./src at /var/www/html, and receives
+#         DB_HOST / DB_NAME / DB_USER / DB_PASSWORD in its environment.
+#         It must not start before the database is actually accepting
+#         connections -- a healthcheck, not just depends_on. (Example 6.)
+#
+#   db    mysql:8.4, with a named volume for /var/lib/mysql and
+#         docker/mysql/init.sql mounted into /docker-entrypoint-initdb.d/.
+#         Publish NO ports. Nothing outside Docker should reach it.
+#
+# Read your .env for credentials. Do not hardcode a password in this file.
+
+# YOUR COMPOSE FILE HERE

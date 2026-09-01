@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Background Survey</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+
+  <h1>Course Background Survey</h1>
+  <p class="intro">This form is served by Apache, validated by JavaScript in your browser,
+    and stored in MySQL by PHP — the whole stack you'll be working in.
+    Fill it out honestly; it's a snapshot, not a test.</p>
+
+  <form id="surveyForm" onsubmit="return validateForm();" action="submit.php" method="post">
+
+    <fieldset>
+      <legend>About You</legend>
+
+      <p>
+        <label for="firstName">First name:</label>
+        <input type="text" id="firstName" name="firstName">
+      </p>
+
+      <p>
+        <label for="lastName">Last name:</label>
+        <input type="text" id="lastName" name="lastName">
+      </p>
+
+      <p>
+        <label for="email">RPI email:</label>
+        <input type="text" id="email" name="email">
+      </p>
+    </fieldset>
+
+    <fieldset>
+      <legend>The LAMP Stack</legend>
+      <p>How comfortable are you with a basic LAMP setup (Linux, Apache, MySQL, PHP) —
+        like the one serving this page?</p>
+
+      <p class="scale">
+        <label class="radio"><input type="radio" name="lampComfort" value="1"> 1 — What's LAMP?</label>
+        <label class="radio"><input type="radio" name="lampComfort" value="2"> 2 — Seen it, shaky on it</label>
+        <label class="radio"><input type="radio" name="lampComfort" value="3"> 3 — Can build a basic page with a database</label>
+        <label class="radio"><input type="radio" name="lampComfort" value="4"> 4 — Comfortable across all four letters</label>
+        <label class="radio"><input type="radio" name="lampComfort" value="5"> 5 — Could teach the intro course</label>
+      </p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Familiarity</legend>
+      <p>For each item: <strong>0</strong> never used it ·
+        <strong>1</strong> tried it once or twice ·
+        <strong>2</strong> used it in a real project ·
+        <strong>3</strong> comfortable, could help someone else.</p>
+
+      <p class="fam">
+        <label for="htmlCss">HTML &amp; CSS:</label>
+        <select id="htmlCss" name="htmlCss">
+          <option value="0">0</option><option value="1">1</option>
+          <option value="2">2</option><option value="3">3</option>
+        </select>
+      </p>
+
+      <p class="fam">
+        <label for="javascript">JavaScript:</label>
+        <select id="javascript" name="javascript">
+          <option value="0">0</option><option value="1">1</option>
+          <option value="2">2</option><option value="3">3</option>
+        </select>
+      </p>
+
+      <p class="fam">
+        <label for="php">PHP:</label>
+        <select id="php" name="php">
+          <option value="0">0</option><option value="1">1</option>
+          <option value="2">2</option><option value="3">3</option>
+        </select>
+      </p>
+
+      <p class="fam">
+        <label for="sqlMysql">SQL / MySQL:</label>
+        <select id="sqlMysql" name="sqlMysql">
+          <option value="0">0</option><option value="1">1</option>
+          <option value="2">2</option><option value="3">3</option>
+        </select>
+      </p>
+
+      <p class="fam">
+        <label for="gitGithub">Git &amp; GitHub:</label>
+        <select id="gitGithub" name="gitGithub">
+          <option value="0">0</option><option value="1">1</option>
+          <option value="2">2</option><option value="3">3</option>
+        </select>
+      </p>
+
+      <p class="fam">
+        <label for="docker">Docker:</label>
+        <select id="docker" name="docker">
+          <option value="0">0</option><option value="1">1</option>
+          <option value="2">2</option><option value="3">3</option>
+        </select>
+      </p>
+
+      <p class="fam">
+        <label for="nodeExpress">Node.js / Express:</label>
+        <select id="nodeExpress" name="nodeExpress">
+          <option value="0">0</option><option value="1">1</option>
+          <option value="2">2</option><option value="3">3</option>
+        </select>
+      </p>
+
+      <p class="fam">
+        <label for="reactFrontend">React or another frontend framework:</label>
+        <select id="reactFrontend" name="reactFrontend">
+          <option value="0">0</option><option value="1">1</option>
+          <option value="2">2</option><option value="3">3</option>
+        </select>
+      </p>
+
+      <p class="fam">
+        <label for="restApis">REST APIs (building or consuming):</label>
+        <select id="restApis" name="restApis">
+          <option value="0">0</option><option value="1">1</option>
+          <option value="2">2</option><option value="3">3</option>
+        </select>
+      </p>
+
+      <p class="fam">
+        <label for="cloud">Cloud platforms (AWS / GCP / Azure):</label>
+        <select id="cloud" name="cloud">
+          <option value="0">0</option><option value="1">1</option>
+          <option value="2">2</option><option value="3">3</option>
+        </select>
+      </p>
+
+      <p class="fam">
+        <label for="agenticAi">Agentic AI patterns (tool use, MCP, multi-agent):</label>
+        <select id="agenticAi" name="agenticAi">
+          <option value="0">0</option><option value="1">1</option>
+          <option value="2">2</option><option value="3">3</option>
+        </select>
+      </p>
+
+      <p class="fam">
+        <label for="aiAssistants">AI coding assistants (Copilot, Claude Code, ...):</label>
+        <select id="aiAssistants" name="aiAssistants">
+          <option value="0">0</option><option value="1">1</option>
+          <option value="2">2</option><option value="3">3</option>
+        </select>
+      </p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Goals</legend>
+      <p>
+        <label for="goals">What do you want to get out of this course?</label><br>
+        <textarea id="goals" name="goals" rows="5" cols="50"
+          onclick="clearGoals();"
+          onblur="restoreGoals();">Please tell us what you hope to get from this course.</textarea>
+      </p>
+    </fieldset>
+
+    <p>
+      <input type="submit" value="Submit Survey">
+    </p>
+
+  </form>
+
+</body>
+</html>
