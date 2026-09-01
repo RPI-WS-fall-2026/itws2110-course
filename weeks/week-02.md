@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| **Tue 9/1** | Docker and infrastructure as code. In-class lab, due that evening. |
+| **Tue 9/1** | Docker and infrastructure as code. In-class exercise, due Friday. |
 | **Fri 9/4** | The LAMP stack on Docker; the GitHub workflow. |
 
 ---
@@ -34,6 +34,6 @@ Free through the RPI library. The link goes through the library proxy, so sign i
 
 | | Due |
 |---|---|
-| In-class lab | Tue 9/1, 11:59 PM |
+| In-class exercise | Fri 9/4, 11:59 PM |
 
 The Friday session is a lab. Bring your laptop with Docker Desktop installed and running.

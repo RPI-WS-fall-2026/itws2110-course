@@ -119,7 +119,7 @@ Making them talk is Friday.
 
 ## What you should be able to answer
 
-Talk these through as you go. The three on `ANSWERS-tue.md` are drawn from them — you do not write up all of these.
+Talk these through as you go. The three on `ANSWERS.md` are drawn from them — you do not write up all of these.
 
 1. `docker restart` kept your data and `docker rm` + `docker run` did not. Why is that the same rule you met with MySQL in Example 1?
 2. You mounted source code read-only and data read-write. Why not both read-write?

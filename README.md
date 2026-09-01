@@ -13,7 +13,7 @@
 
 ## How this course works
 
-**Tuesday** is lecture. A reading is due, and there is an in-class lab due that evening — these count toward participation.
+**Tuesday** is lecture. A reading is due, and there is an in-class exercise — due that evening unless the week's page says otherwise. These count toward participation.
 
 **Friday** is lab. You work on that week's homework, which is due the following Friday at 11:59 PM.
 
@@ -40,7 +40,7 @@ Weeks are linked as they are posted. Everything is due at **11:59 PM** on the da
 | Week | Sessions | Topic | Due |
 |---|---|---|---|
 | **[1](weeks/week-01.md)** | Fri 8/28 | Course introduction; the modern web application | Survey — Fri 8/28 |
-| **[2](weeks/week-02.md)** | Tue 9/1 · Fri 9/4 | Docker and infrastructure as code; LAMP on Docker | In-class — Tue 9/1 |
+| **[2](weeks/week-02.md)** | Tue 9/1 · Fri 9/4 | Docker and infrastructure as code; LAMP on Docker | In-class — Fri 9/4 |
 | 3 | Tue 9/8 · Fri 9/11 | Test-driven development; writing tests and CI | In-class — Tue 9/8<br>HW 1 — Fri 9/11 |
 | 4 | Tue 9/15 · Fri 9/18 | CSS frameworks | In-class — Tue 9/15<br>HW 2 — Fri 9/18 |
 | 5 | Tue 9/22 · Fri 9/25 | React — components and the render model | In-class — Tue 9/22<br>HW 3 — Fri 9/25 |

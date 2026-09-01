@@ -1,10 +1,16 @@
-# In-class — Week 2, Tuesday
+# In-class — Week 2
+
+**Due Friday, September 4, 11:59 PM.** Counts toward participation.
 
 **Name:**
 **RCS ID:**
 
-Three questions. Answer in your own words — a short paragraph each is plenty. I am
-looking for whether the idea landed, not for length, and not for the commands you ran.
+Three questions on Tuesday's exercises. Answer in your own words — a short paragraph each
+is plenty. I am looking for whether the idea landed, not for length, and not for the
+commands you ran.
+
+You have until Friday, so you can come back to these after Friday's session if something
+has not clicked yet.
 
 ---
 

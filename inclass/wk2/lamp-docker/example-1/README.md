@@ -172,7 +172,7 @@ docker volume rm db1_data
 
 ## What you should be able to answer
 
-Talk these through as you go. The three on `ANSWERS-tue.md` are drawn from them — you do not write up all of these.
+Talk these through as you go. The three on `ANSWERS.md` are drawn from them — you do not write up all of these.
 
 1. What is the difference between an image and a container?
 2. Why did `-p 3306:3306` have to be there for part C but not for part B?

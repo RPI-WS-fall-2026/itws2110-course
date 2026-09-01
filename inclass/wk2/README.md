@@ -1,24 +1,28 @@
 # Week 2 — Docker
 
-| | | Due |
-|---|---|---|
-| **Tue 9/1** | One service at a time — a database, then a web server, never both | `ANSWERS-tue.md` — 3 questions, tonight 11:59 PM |
-| **Fri 9/4** | Make them talk — networks, then Compose | `ANSWERS-fri.md` — 3 questions, tonight 11:59 PM |
+| | |
+|---|---|
+| **Tue 9/1** | One service at a time — a database, then a web server, never both |
+| **Fri 9/4** | Make them talk — networks, then Compose |
 
-Both count toward participation. **Homework 1 is assigned Friday.**
+**One hand-in for the week: `ANSWERS.md`, three questions on Tuesday's exercises, due
+Friday 9/4 at 11:59 PM.** It counts toward participation. Friday's session has nothing of
+its own to submit.
 
-## Get your answer files
+**Homework 1 is assigned Friday.**
 
-Copy both files from [`starter/`](starter/) into `inclass/wk2/` in **your own private
+## Get the answer sheet
+
+Copy [`starter/ANSWERS.md`](starter/) into `inclass/wk2/` in **your own private
 repository**:
 
 ```bash
 cp -R ../itws2110-course/inclass/wk2/starter/. inclass/wk2/
 ```
 
-Each is **three questions**, answered in your own words. They are not asking what you
-typed — they are asking what the exercises were demonstrating. Skim them before you
-start, so you know what to pay attention to.
+**Three questions**, answered in your own words. They are not asking what you typed —
+they are asking what the exercises were demonstrating. Skim them before you start, so you
+know what to pay attention to, and hand them in by Friday night.
 
 ---
 
@@ -56,4 +60,4 @@ git commit -m "In-class week 2"
 git push
 ```
 
-Answers go in `inclass/wk2/` **in your repository**. Do not edit files in the course repository — you cannot push to it, and the next `git pull` would discard your changes.
+Your answers go in `inclass/wk2/ANSWERS.md` **in your repository**, by Friday night. Do not edit files in the course repository — you cannot push to it, and the next `git pull` would discard your changes.

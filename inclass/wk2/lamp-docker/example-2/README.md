@@ -107,7 +107,7 @@ docker volume rm db2_data
 
 ## What you should be able to answer
 
-Talk these through as you go. The three on `ANSWERS-tue.md` are drawn from them — you do not write up all of these.
+Talk these through as you go. The three on `ANSWERS.md` are drawn from them — you do not write up all of these.
 
 1. What is the build context, and what is it for?
 2. Why does `docker build` finish almost instantly the second time you run it?
