@@ -8,9 +8,11 @@ The question this example answers is: *how does a file on my laptop get inside a
 
 ```
 example-3/
-└── site/
-    ├── index.html
-    └── style.css
+├── site/
+│   ├── index.html
+│   └── style.css
+└── other-site/
+    └── index.html      # used in part E
 ```
 
 ---
@@ -38,12 +40,12 @@ exit
 
 ```
 docker rm -f web1
-docker run -d --name web1 -p 8080:80 \
-  -v "$PWD/site":/usr/local/apache2/htdocs \
-  httpd:2.4
+docker run -d --name web1 -p 8080:80 -v "${PWD}/site:/usr/local/apache2/htdocs" httpd:2.4
 ```
 
-*(Windows PowerShell: use `-v "${PWD}/site:/usr/local/apache2/htdocs"`.)*
+The whole `-v` argument is inside one pair of quotes on purpose. Written that way it works
+unchanged in bash, zsh and PowerShell. (In `cmd` you would need `%cd%` instead of
+`${PWD}` — use PowerShell.)
 
 Reload. Your page, not theirs.
 
@@ -78,9 +80,7 @@ A bind mount is read-write by default, which means a bug in the web server can r
 
 ```
 docker rm -f web1
-docker run -d --name web1 -p 8080:80 \
-  -v "$PWD/site":/usr/local/apache2/htdocs:ro \
-  httpd:2.4
+docker run -d --name web1 -p 8080:80 -v "${PWD}/site:/usr/local/apache2/htdocs:ro" httpd:2.4
 docker exec web1 sh -c 'echo test > /usr/local/apache2/htdocs/nope.html'
 ```
 
@@ -94,7 +94,7 @@ Your laptop is still free to edit the files. The container is not.
 
 You have now seen both of Docker's storage options. They are for different jobs:
 
-| | Bind mount (`-v "$PWD/site":/path`) | Named volume (`-v db1_data:/path`) |
+| | Bind mount (`-v "${PWD}/site:/path"`) | Named volume (`-v db1_data:/path`) |
 |---|---|---|
 | Lives | in a folder you chose | in Docker's own storage |
 | You can edit it | yes, with any editor | not directly |
@@ -105,10 +105,10 @@ Source code in a bind mount, database files in a volume. Mixing those up is a re
 
 ## E — One image, two sites
 
+There is a second folder in this directory, `other-site/`, with one page in it:
+
 ```
-mkdir -p /tmp/other-site
-echo "<h1>A completely different site</h1>" > /tmp/other-site/index.html
-docker run -d --name web2 -p 8081:80 -v /tmp/other-site:/usr/local/apache2/htdocs httpd:2.4
+docker run -d --name web2 -p 8081:80 -v "${PWD}/other-site:/usr/local/apache2/htdocs" httpd:2.4
 ```
 
 <http://localhost:8080> and <http://localhost:8081> are two containers from **one image**, serving different content, isolated from each other. Nothing was rebuilt, nothing was configured. This is the argument for containers in one command.
@@ -117,8 +117,9 @@ docker run -d --name web2 -p 8081:80 -v /tmp/other-site:/usr/local/apache2/htdoc
 
 ```
 docker rm -f web1 web2
-rm -rf /tmp/other-site site/hello.html
 ```
+
+Then delete `site/hello.html` — the file you created from inside the container.
 
 ---
 
@@ -128,5 +129,5 @@ Talk these through as you go. The three on `ANSWERS-tue.md` are drawn from them 
 
 1. You edited `index.html` and the change appeared with no rebuild. Where is that file actually stored?
 2. What happened to the image's own `index.html` while your mount was in place?
-3. Your database used `-v db1_data:/var/lib/mysql` and this used `-v "$PWD/site":/...`. Both are `-v`. What is different?
+3. Your database used `-v db1_data:/var/lib/mysql` and this used `-v "${PWD}/site:/..."`. Both are `-v`. What is different?
 4. Why would you ever mount your source code read-only?

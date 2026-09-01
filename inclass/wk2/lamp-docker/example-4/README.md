@@ -13,7 +13,7 @@ example-4/
 ## A — Run it from a bind mount
 
 ```
-docker run -d --name gb -p 8080:80 -v "$PWD/src":/var/www/html php:8.3-apache
+docker run -d --name gb -p 8080:80 -v "${PWD}/src:/var/www/html" php:8.3-apache
 ```
 
 Open <http://localhost:8080>, sign the guestbook a couple of times, then look on your laptop:
@@ -32,9 +32,10 @@ Delete `src/data/` when you want a clean slate. Note that you can do that from y
 
 ## B — Now take the mount away
 
+Delete the `src/data/` folder, then:
+
 ```
 docker rm -f gb
-rm -rf src/data
 docker build -t ex4-gb .
 docker run -d --name gb -p 8080:80 ex4-gb
 ```
@@ -89,7 +90,7 @@ UID 33 is `www-data`. This is a genuinely common production bug, and now you hav
 
 ```
 docker rm -f gb
-docker run -d --name gb -p 8080:80 -v "$PWD/src":/var/www/html:ro ex4-gb
+docker run -d --name gb -p 8080:80 -v "${PWD}/src:/var/www/html:ro" ex4-gb
 ```
 
 Try to sign it:
@@ -104,8 +105,9 @@ The page still renders and still lists existing entries. Reading works; writing 
 docker rm -f gb
 docker volume rm gb_data
 docker rmi ex4-gb
-rm -rf src/data
 ```
+
+Then delete the `src/data/` folder.
 
 ---
 
