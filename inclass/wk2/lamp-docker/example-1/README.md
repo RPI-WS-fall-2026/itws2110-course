@@ -8,14 +8,25 @@ There are no files in this directory. Everything happens on the command line.
 
 ---
 
+## Before you start — which terminal?
+
+Every command in this example is the same on macOS, Linux and Windows. Two things about
+Windows are worth knowing before you hit them:
+
+- **Use PowerShell or Windows Terminal.** Docker Desktop must be running.
+- **If you use Git Bash**, `docker exec -it` fails with *"the input device is not a
+  TTY."* That is MinTTY, not Docker. Either prefix the command with `winpty`
+  (`winpty docker exec -it db1 bash`) or use PowerShell for this example.
+
+The commands below are written on one line each so they paste identically everywhere. If
+you reformat one across several lines, the continuation character differs by shell —
+`\` in bash, a backtick in PowerShell, `^` in `cmd`. That mismatch is the single most
+common reason a copied Docker command fails on Windows.
+
 ## A — Start it
 
 ```
-docker run --name db1 \
-  -e MYSQL_ROOT_PASSWORD=root \
-  -e MYSQL_DATABASE=app \
-  -p 3306:3306 \
-  -d mysql:8.4
+docker run --name db1 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=app -p 3306:3306 -d mysql:8.4
 ```
 
 Read that flag by flag before you press enter:
@@ -140,12 +151,7 @@ The table is gone. **A container's filesystem dies with the container.** This is
 
 ```
 docker rm -f db1
-docker run --name db1 \
-  -e MYSQL_ROOT_PASSWORD=root \
-  -e MYSQL_DATABASE=app \
-  -p 3306:3306 \
-  -v db1_data:/var/lib/mysql \
-  -d mysql:8.4
+docker run --name db1 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=app -p 3306:3306 -v db1_data:/var/lib/mysql -d mysql:8.4
 ```
 
 `-v db1_data:/var/lib/mysql` mounts a **named volume** — storage managed by Docker, living outside the container — over the directory where MySQL keeps its files. Recreate your table, then `docker rm -f db1` and run it again. This time the data is still there.
