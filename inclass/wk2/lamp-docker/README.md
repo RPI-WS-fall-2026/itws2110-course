@@ -20,13 +20,15 @@ Examples 3 and 4 have no database in them at all. That is deliberate. By the end
 | | Example | Idea | Ends with |
 |---|---|---|---|
 | 5 | [`example-5/`](example-5/) | user-defined network, DNS by container name, the startup race | Six commands in an exact order |
-| 6 | [`example-6/`](example-6/) | Compose, **`compose watch`**, healthchecks, `.env` | One file, one command |
-| — | [`example-mern/`](example-mern/) | Compose against a different stack entirely | Nothing here is PHP-specific |
-| 7 | [`example-7/`](example-7/) | least-privilege DB user, migrations, `.dockerignore`, non-root | Optional depth |
+| 6 | [`example-6/`](example-6/) | Compose, **`compose watch`**, healthchecks — **against Node + Mongo, not LAMP** | One file, one command |
 
-`example-mern` earns its place by being *not LAMP*. Same `docker compose up`, same service-name DNS, same volume — with Mongo, Express, and Node instead. It is the cheapest available proof that Compose is not a PHP tool. Then **Homework 1 is assigned**, and students build LAMP with everything from both days.
+Example 6 is deliberately not PHP. Students never see a finished LAMP `docker-compose.yml`
+in class — **assembling one is Homework 1**, assigned at the end of Friday. What they get
+instead is the identical set of ideas (service-name DNS, healthchecks, volumes, `watch`)
+on a stack where copying is impossible.
 
-Example 7 is optional. Cut it for time, or hold 7B and 7C back and deploy them in the security and database weeks, where they pay off directly.
+Two former examples — LAMP-on-Compose and the production-hardening one — are retired to
+`itws2110-instructor/notes/retired-examples/` for reuse in the security and ORM weeks.
 
 ## The four moments worth protecting
 
@@ -34,7 +36,7 @@ Example 7 is optional. Cut it for time, or hold 7B and 7C back and deploy them i
 - **2C** — change `init.sql`, rebuild, watch nothing happen. The most common self-inflicted bug in this course.
 - **4B** — `docker restart` keeps the guestbook, `docker rm` + `docker run` does not. Same rule as 1D, now in the web tier. If they get this, they understand containers.
 - **5E** — the container is *running* but the database is not *ready*. 6B shows the fix.
-- **6C** — `docker compose watch`, then edit a file and watch the terminal say `Syncing service "web"`. From here on this is how they run everything.
+- **6C** — `docker compose watch`, then edit `server.js` and watch the terminal say `Syncing service "server"` and restart it. From here on this is how they run everything.
 
 Each README ends with questions that have no copy-pasteable answer. Those are the ones worth asking out loud.
 
@@ -44,24 +46,23 @@ Each README ends with questions that have no copy-pasteable answer. Those are th
 docker pull mysql:8.4
 docker pull httpd:2.4
 docker pull php:8.3-apache
-docker pull adminer:5
 docker pull mongo:8
 docker pull node:18-alpine
 ```
 
-Six images over lecture-hall wifi at once will not go well. Put this on the week-1 slide, or budget ten minutes.
+Five images over lecture-hall wifi at once will not go well. Put this on the week-1 slide, or budget ten minutes.
 
 ## Port conflicts
 
-Examples 1-7 all publish 8080 (mern uses 3000). That is deliberate — students collide with themselves and have to read the error. Tear down before moving on:
+Examples 1-5 publish 8080; example 6 publishes 3000. That is deliberate — students collide with themselves and have to read the error. Tear down before moving on:
 
 ```
 docker rm -f web1 web2 gb db1 db2 web db     # examples 1-5
 docker network rm itwsnet                    # example 5
-docker compose down -v                       # examples 6, 7, mern
+docker compose down -v                       # example 6
 ```
 
-Examples 6, 7 and mern are run with **`docker compose watch`**, which stays in the
+Example 6 is run with **`docker compose watch`**, which stays in the
 foreground and syncs edits into the running containers. `Ctrl-C` stops watching; the
 containers keep running until `docker compose down`. Requires Compose v2.22 or newer —
 check with `docker compose version`.
@@ -69,6 +70,6 @@ check with `docker compose version`.
 ## Housekeeping
 
 - All PHP/MySQL examples run `mysql:8.4` and `php:8.3-apache`, matching the student template.
-- `example-mern/` is stripped to the Compose demo: the old lab spec, the unused CRA client, and 396 MB of `node_modules` are gone. Keep the `.gitignore` there — without it, a student's `npm install` recommits them.
+- `example-6/` has a `.gitignore` for `node_modules/`. Keep it — without it, a student's `npm install` recommits 15 MB.
 - `LAB.md.bak` is the retired week-1 lab. Its Part C survives as Homework 1, Task 6.
 - This folder is still named `lamp-docker`, which no longer describes it — LAMP moved to Homework 1.

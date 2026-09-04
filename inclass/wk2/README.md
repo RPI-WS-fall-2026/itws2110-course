@@ -42,9 +42,7 @@ You run a database in a container, then a web server in a container. **They will
 | | | |
 |---|---|---|
 | 5 | [Two containers, no Compose](lamp-docker/example-5/) | a network, DNS by container name, a startup race |
-| 6 | [The same thing, declared once](lamp-docker/example-6/) | Compose, healthchecks, `.env` |
-| — | [Compose is not a PHP tool](lamp-docker/example-mern/) | the identical file, against Node and MongoDB |
-| 7 | [Production-shaped](lamp-docker/example-7/) | *optional* — least privilege, migrations, non-root |
+| 6 | [The same thing, declared once](lamp-docker/example-6/) | Compose and `compose watch` — on Node + MongoDB, so the ideas are what you take away |
 
 Then read [Homework 1](../../homework/hw1/README.md) before you leave. It is due Friday 9/11 and it is not a one-evening assignment.
 

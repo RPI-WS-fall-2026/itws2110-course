@@ -108,7 +108,7 @@ The client greets you with this, and every non-interactive `mysql` command will 
 mysql: [Warning] Using a password on the command line interface can be insecure.
 ```
 
-It is right, and you will see it all semester. In a real deployment the password comes from a secrets manager, not from your shell history — Example 6 takes one step in that direction.
+It is right, and you will see it all semester. In a real deployment the password comes from a secrets manager, not from your shell history — Homework 1 takes one step in that direction with a `.env` file.
 
 ### The shortcut
 

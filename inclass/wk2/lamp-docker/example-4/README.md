@@ -57,47 +57,7 @@ Reload. **Zero entries.** Same image, same command, new container, empty guestbo
 
 This is the Example 1 lesson arriving in the web tier. A container's writable layer belongs to *that container* and dies with it. Nothing about "the web server" makes it different from "the database" — the rule is about containers, not about what runs inside them.
 
-## C — A named volume, and the ownership trap
 
-```
-docker rm -f gb
-docker run -d --name gb -p 8080:80 -v gb_data:/var/www/html/data ex4-gb
-```
-
-Sign it, then `docker rm -f gb` and run that same command again. Entries survive.
-
-The interesting part is in the Dockerfile:
-
-```dockerfile
-RUN mkdir -p /var/www/html/data && chown www-data:www-data /var/www/html/data
-```
-
-Take it out and the example breaks — you get *"Could not write to /var/www/html/data/visits.log"*. Docker creates a new named volume **owned by root**, and Apache is not root. It only works because the directory exists in the image with the right owner first: when a fresh volume is mounted over a non-empty image path, Docker seeds it from that path, ownership included.
-
-Check for yourself:
-
-```
-docker run --rm -v gb_data:/d alpine ls -ld /d
-```
-
-```
-drwxr-xr-x 2 33 33 4096 /d
-```
-
-UID 33 is `www-data`. This is a genuinely common production bug, and now you have seen it on purpose instead of at 2am.
-
-## D — Read-only, and a real error path
-
-```
-docker rm -f gb
-docker run -d --name gb -p 8080:80 -v "${PWD}/src:/var/www/html:ro" ex4-gb
-```
-
-Try to sign it:
-
-> Could not write to /var/www/html/data/visits.log — is it mounted read-only?
-
-The page still renders and still lists existing entries. Reading works; writing does not. Serving your code read-only while giving the app a writable volume for *only* the directory it must write to is exactly how you would deploy this.
 
 ## Clean up
 
