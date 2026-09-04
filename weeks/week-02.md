@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| **Tue 9/1** | Docker and infrastructure as code. In-class exercise, due Friday. [Slides](../slides/2_docker.pdf) |
+| **Tue 9/1** | Docker and infrastructure as code. [Slides](../slides/2_docker.pdf) |
 | **Fri 9/4** | The LAMP stack on Docker; the GitHub workflow. [Slides](../slides/3_docker_troubleshooting.pdf) |
 ---
 
@@ -31,8 +31,6 @@ Free through the RPI library. The link goes through the library proxy, so sign i
 
 ## Due this week
 
-| | Due |
-|---|---|
-| In-class exercise | Fri 9/4, 11:59 PM |
+**Nothing is due this week.** The in-class exercise has been dropped; the Docker examples are there to work through, not to hand in. Homework 1 is assigned Friday and due Friday 9/11.
 
 The Friday session is a lab. Bring your laptop with Docker Desktop installed and running.

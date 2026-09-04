@@ -110,7 +110,7 @@ docker network rm itwsnet
 
 ## What you should be able to answer
 
-Talk these through as you go. Nothing from Friday gets written up — the week's only hand-in is `ANSWERS.md`, on Tuesday's material.
+Talk these through as you go. Nothing is handed in.
 
 1. Why can the web container reach `db` when your laptop cannot?
 2. You ran six commands to start this. What breaks when a teammate runs five of them, in a different order, with a different network name?

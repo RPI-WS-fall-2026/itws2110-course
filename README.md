@@ -40,7 +40,7 @@ Weeks are linked as they are posted. Everything is due at **11:59 PM** on the da
 | Week | Sessions | Topic | Due |
 |---|---|---|---|
 | **[1](weeks/week-01.md)** | Fri 8/28 | Course introduction; the modern web application | Survey — Fri 8/28 |
-| **[2](weeks/week-02.md)** | Tue 9/1 · Fri 9/4 | Docker and infrastructure as code; LAMP on Docker | In-class — Fri 9/4 |
+| **[2](weeks/week-02.md)** | Tue 9/1 · Fri 9/4 | Docker and infrastructure as code; LAMP on Docker | *Nothing due* |
 | **[3](weeks/week-03.md)** | Tue 9/8 · Fri 9/11 | Test-driven development; writing tests and CI | In-class — Tue 9/8<br>HW 1 — Fri 9/11 |
 | 4 | Tue 9/15 · Fri 9/18 | CSS frameworks | In-class — Tue 9/15<br>HW 2 — Fri 9/18 |
 | 5 | Tue 9/22 · Fri 9/25 | React — components and the render model | In-class — Tue 9/22<br>HW 3 — Fri 9/25 |

@@ -5,24 +5,7 @@
 | **Tue 9/1** | One service at a time — a database, then a web server, never both |
 | **Fri 9/4** | Make them talk — networks, then Compose |
 
-**One hand-in for the week: `ANSWERS.md`, three questions on Tuesday's exercises, due
-Friday 9/4 at 11:59 PM.** It counts toward participation. Friday's session has nothing of
-its own to submit.
-
-**Homework 1 is assigned Friday.**
-
-## Get the answer sheet
-
-Copy [`starter/ANSWERS.md`](starter/) into `inclass/wk2/` in **your own private
-repository**:
-
-```bash
-cp -R ../itws2110-course/inclass/wk2/starter/. inclass/wk2/
-```
-
-**Three questions**, answered in your own words. They are not asking what you typed —
-they are asking what the exercises were demonstrating. Skim them before you start, so you
-know what to pay attention to, and hand them in by Friday night.
+**Nothing is due for this week's in-class work. Homework 1 is assigned Friday.**
 
 ---
 
@@ -45,17 +28,3 @@ You run a database in a container, then a web server in a container. **They will
 | 6 | [The same thing, declared once](lamp-docker/example-6/) | Compose, `compose watch`, and where the password lives — on Node + MongoDB, so the ideas are what you take away |
 
 Then read [Homework 1](../../homework/hw1/README.md) before you leave. It is due Friday 9/11 and it is not a one-evening assignment.
-
----
-
-## Submit
-
-Commit to `main` and push. No branch, no pull request.
-
-```bash
-git add inclass/wk2/
-git commit -m "In-class week 2"
-git push
-```
-
-Your answers go in `inclass/wk2/ANSWERS.md` **in your repository**, by Friday night. Do not edit files in the course repository — you cannot push to it, and the next `git pull` would discard your changes.

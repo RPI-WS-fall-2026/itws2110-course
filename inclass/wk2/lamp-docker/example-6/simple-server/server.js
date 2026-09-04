@@ -28,7 +28,7 @@ const Visitor = mongoose.model('Visitor', visitorSchema);
 // Routes
 app.get('/', (req, res) => {
   res.json({
-    message: 'Hello from Express!',
+    message: 'Hello Section 2 from Express! I changed',
     timestamp: new Date().toISOString(),
   });
 });

@@ -125,7 +125,7 @@ Then delete `site/hello.html` — the file you created from inside the container
 
 ## What you should be able to answer
 
-Talk these through as you go. The three on `ANSWERS.md` are drawn from them — you do not write up all of these.
+Talk these through as you go. Nothing is handed in.
 
 1. You edited `index.html` and the change appeared with no rebuild. Where is that file actually stored?
 2. What happened to the image's own `index.html` while your mount was in place?
