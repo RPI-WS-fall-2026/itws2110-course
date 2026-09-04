@@ -51,7 +51,6 @@ what you would do instead if those rows were real users and you could not delete
 
 ---
 
-**AI Use Statement** *(required)* — which tools, what for, what you changed. Two or three
-sentences. "I did not use AI" is a complete answer.
+
 
 

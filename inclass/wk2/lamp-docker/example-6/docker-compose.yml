@@ -4,7 +4,10 @@ services:
     ports:
       - "${APP_PORT:-3000}:3000"
     environment:
-      MONGO_URI: mongodb://mongo:27017/lab1
+      # The password never appears in this file. It comes from .env, which is
+      # gitignored. The :-defaults let the example run on a bare clone -- and
+      # they are what you would be shipping if you forgot to change them.
+      MONGO_URI: mongodb://${MONGO_USER:-app}:${MONGO_PASSWORD:-change_me}@mongo:27017/lab1?authSource=admin
     depends_on:
       mongo:
         condition: service_healthy
@@ -24,6 +27,12 @@ services:
 
   mongo:
     image: mongo:8
+    environment:
+      # Creates this user the FIRST time the data volume is empty -- and only
+      # then. Change the password after that and Mongo will not notice, for the
+      # same reason init.sql did not re-run in Example 2. down -v, then up.
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-app}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-change_me}
     volumes:
       - mongo_data:/data/db
     healthcheck:

@@ -20,7 +20,7 @@ Examples 3 and 4 have no database in them at all. That is deliberate. By the end
 | | Example | Idea | Ends with |
 |---|---|---|---|
 | 5 | [`example-5/`](example-5/) | user-defined network, DNS by container name, the startup race | Six commands in an exact order |
-| 6 | [`example-6/`](example-6/) | Compose, **`compose watch`**, healthchecks — **against Node + Mongo, not LAMP** | One file, one command |
+| 6 | [`example-6/`](example-6/) | Compose, **`compose watch`**, healthchecks, **`.env` credentials** — **against Node + Mongo, not LAMP** | One file, one command |
 
 Example 6 is deliberately not PHP. Students never see a finished LAMP `docker-compose.yml`
 in class — **assembling one is Homework 1**, assigned at the end of Friday. What they get
@@ -36,6 +36,7 @@ Two former examples — LAMP-on-Compose and the production-hardening one — are
 - **2C** — change `init.sql`, rebuild, watch nothing happen. The most common self-inflicted bug in this course.
 - **4B** — `docker restart` keeps the guestbook, `docker rm` + `docker run` does not. Same rule as 1D, now in the web tier. If they get this, they understand containers.
 - **5E** — the container is *running* but the database is not *ready*. 6B shows the fix.
+- **6D** — change the password in `.env` without `down -v`: `Authentication failed`. The answer to 5's closing question, and Example 2C wearing a different hat.
 - **6C** — `docker compose watch`, then edit `server.js` and watch the terminal say `Syncing service "server"` and restart it. From here on this is how they run everything.
 
 Each README ends with questions that have no copy-pasteable answer. Those are the ones worth asking out loud.

@@ -4,9 +4,8 @@
 
 | | |
 |---|---|
-| **Tue 9/1** | Docker and infrastructure as code. In-class exercise, due Friday. |
-| **Fri 9/4** | The LAMP stack on Docker; the GitHub workflow. |
-
+| **Tue 9/1** | Docker and infrastructure as code. In-class exercise, due Friday. [Slides](../slides/2_docker.pdf) |
+| **Fri 9/4** | The LAMP stack on Docker; the GitHub workflow. [Slides](../slides/3_docker_troubleshooting.pdf) |
 ---
 
 ## Reading — due Tuesday

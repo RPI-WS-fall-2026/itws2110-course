@@ -63,8 +63,8 @@ lists `pdo_mysql`.
 
 - **The database publishes no ports.** Only `web` may reach it. If you can connect from
   your laptop, you are not done.
-- **Credentials come from `.env`**, which is gitignored. Copy `.env.example`, change the
-  password. A password committed to git is a zero on this task.
+- **Credentials come from `.env`**, which is gitignored — the pattern from Example 6D. Copy
+  `.env.example`, change the password. A password committed to git is a zero on this task.
 - **`web` waits for `db` to be *healthy*,** not merely started. You saw why in Example 5E.
 
 Run it with `docker compose watch`, then edit `src/index.html` — change the heading — and
