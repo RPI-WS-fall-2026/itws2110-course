@@ -155,3 +155,9 @@ docker compose down -v        # ... and delete the volume too
 ```
 docker compose down -v
 ```
+
+Open the Docker AI, and have it explain the Docker Compose file to you.
+
+"Can you explain this docker compose file to me?"
+
+"Can you identify security issues with this Docker setup?"

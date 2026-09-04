@@ -1,8 +1,7 @@
 <?php
-// TASK 4 — the PHP layer.
-//
-// The browser already validated this form. That does not matter: anyone can
-// POST here with curl and skip your JavaScript entirely. Validate again.
+// Given, complete. Validates on the server, inserts with a prepared statement,
+// and escapes everything it echoes. You do not need to change this file --
+// but read it, because it is what your containers exist to run.
 
 include __DIR__ . "/db/connect.php";
 
@@ -24,27 +23,45 @@ $items = [
 ];
 
 // -- 4a. Server-side validation -------------------------------------------
-// firstName, lastName, email and goals must be non-empty after trimming.
-// lampComfort must be an integer from 1 to 5.
-// Clamp each familiarity score into 0-3.
-// On bad input: http_response_code(422) and stop. Do not insert.
-//
-// YOUR VALIDATION HERE
+$required = ["firstName", "lastName", "email", "goals"];
+foreach ($required as $field) {
+    if (trim($_POST[$field] ?? "") === "") {
+        http_response_code(422);
+        exit("Missing field: " . htmlspecialchars($field));
+    }
+}
+
+$lampComfort = (int) ($_POST["lampComfort"] ?? 0);
+if ($lampComfort < 1 || $lampComfort > 5) {
+    http_response_code(422);
+    exit("LAMP comfort rating is required (1-5).");
+}
+
+$familiarity = [];
+foreach ($items as $field => $info) {
+    $familiarity[$field] = max(0, min(3, (int) ($_POST[$field] ?? 0)));
+}
 
 
 // -- 4b. Insert ------------------------------------------------------------
-// Use a PREPARED STATEMENT. Never build SQL by concatenating $_POST into a
-// string -- we will look for this, and week 12 is about what happens when
-// you do. connectDb() is in db/connect.php and returns a PDO handle.
-//
-// YOUR INSERT HERE
+$pdo = connectDb();
+
+$columns = array_map(fn($info) => $info[0], array_values($items));
+$placeholders = implode(", ", array_fill(0, count($columns) + 5, "?"));
+$sql = "INSERT INTO survey (first_name, last_name, email, lamp_comfort, "
+     . implode(", ", $columns) . ", goals) VALUES ($placeholders)";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute(array_merge(
+    [trim($_POST["firstName"]), trim($_POST["lastName"]), trim($_POST["email"]), $lampComfort],
+    array_values($familiarity),
+    [trim($_POST["goals"])]
+));
 
 
 // -- 4c. Two summary numbers for the confirmation page ---------------------
-// $total   = how many rows are in survey
-// $avgLamp = the average lamp_comfort, rounded to one decimal
-//
-// YOUR QUERIES HERE
+$total   = $pdo->query("SELECT COUNT(*) FROM survey")->fetchColumn();
+$avgLamp = $pdo->query("SELECT ROUND(AVG(lamp_comfort), 1) FROM survey")->fetchColumn();
 
 ?>
 <!DOCTYPE html>
@@ -57,11 +74,20 @@ $items = [
 </head>
 <body>
 
-  <!-- 4d. Echo the submitter's first name, $total, and $avgLamp.
-       Every value that came from the user goes through htmlspecialchars().
-       Skipping that is the bug we spend week 12 on. -->
+  <h1>Thanks, <?= htmlspecialchars(trim($_POST["firstName"])) ?>!</h1>
 
-  <h1>Thanks!</h1>
+  <p>Your survey was saved.
+     Submissions so far: <?= (int) $total ?>.
+     Class average LAMP comfort: <?= htmlspecialchars($avgLamp) ?> / 5.</p>
+
+  <h2>Your answers</h2>
+  <p>LAMP comfort: <?= $lampComfort ?> / 5</p>
+  <ul>
+    <?php foreach ($items as $field => $info): ?>
+      <li><?= htmlspecialchars($info[1]) ?>: <?= $familiarity[$field] ?> / 3</li>
+    <?php endforeach; ?>
+  </ul>
+  <p><strong>Goals:</strong> <?= htmlspecialchars(trim($_POST["goals"])) ?></p>
 
   <p><a href="index.html">Back to the survey</a></p>
 

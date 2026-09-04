@@ -1,7 +1,8 @@
--- TASK 1 — the database layer.
+-- TASK 1 — schema and seed data.
 --
--- This file runs once, when MySQL initializes an empty data directory.
--- Create one table named `survey` that can hold a completed form.
+-- This runs once, when MySQL initializes an empty data directory.
+--
+-- (a) Create one table named `survey` that can hold a completed form:
 --
 -- Column            Type              Notes
 -- ----------------  ----------------  ---------------------------------------
@@ -25,9 +26,12 @@
 -- goals             TEXT              required
 -- created_at        TIMESTAMP         defaults to the time of insert
 --
--- Reminder from Example 2: if you change this file after the database has
--- already initialized, nothing happens until you `docker compose down -v`.
+-- (b) SEED it: insert at least three sample rows, so the confirmation page has
+--     something to average before any real person submits. Make them obviously
+--     fake -- this table will hold classmates' real answers.
 
 USE app;
 
 -- YOUR CREATE TABLE HERE
+
+-- YOUR INSERTs HERE

@@ -1,17 +1,19 @@
 # TASK 3 — wire the two tiers together.
 #
-# Two services:
+# Two services, both BUILT from your Dockerfiles (Example 6 shows the shape):
 #
-#   web   built from docker/php-apache/, publishes ${APP_PORT:-8080} to
-#         container port 80, mounts ./src at /var/www/html, and receives
-#         DB_HOST / DB_NAME / DB_USER / DB_PASSWORD in its environment.
-#         It must not start before the database is actually accepting
-#         connections -- a healthcheck, not just depends_on. (Example 6.)
+#   web   build: ./docker/php-apache
+#         publishes ${APP_PORT:-8080} to container port 80
+#         receives DB_HOST / DB_NAME / DB_USER / DB_PASSWORD in its environment
+#         must not start before the database is HEALTHY -- a healthcheck plus
+#           depends_on: condition: service_healthy, not depends_on alone
+#         a develop.watch block that syncs ./src into /var/www/html
 #
-#   db    mysql:8.4, with a named volume for /var/lib/mysql and
-#         docker/mysql/init.sql mounted into /docker-entrypoint-initdb.d/.
-#         Publish NO ports. Nothing outside Docker should reach it.
+#   db    build: ./docker/mysql
+#         a named volume for /var/lib/mysql
+#         a healthcheck (mysqladmin ping, as in Example 6's mongo healthcheck)
+#         publishes NO ports. Nothing outside Docker should reach it.
 #
-# Read your .env for credentials. Do not hardcode a password in this file.
+# Credentials come from .env. Do not write a password into this file.
 
 # YOUR COMPOSE FILE HERE
