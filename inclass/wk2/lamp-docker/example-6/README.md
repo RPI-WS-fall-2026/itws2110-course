@@ -28,14 +28,27 @@ Not `up` — **`watch`**. It builds, starts everything, and then stays in the fo
 watching your source for changes. This is how you will run every Compose project from
 here on.
 
+Open <http://localhost:3000> in a browser — a JSON greeting. Then
+<http://localhost:3000/api/visitors> — an empty list. Reading from an API is just visiting
+a URL, and a browser is a perfectly good client for that.
+
+Writing to it needs a POST, which a browser's address bar cannot do. The request body is
+in `visitor.json`, so the command is identical on every operating system — nothing to
+quote, nothing to escape:
+
 ```
-curl localhost:3000
-curl -X POST localhost:3000/api/visitors -H "Content-Type: application/json" -d "{\"name\":\"Ada\",\"message\":\"hello\"}"
-curl localhost:3000/api/visitors
+curl -X POST localhost:3000/api/visitors -H "Content-Type: application/json" -d "@visitor.json"
 ```
 
-**On Windows, type `curl.exe`, not `curl`.** In PowerShell, bare `curl` is an alias for
-`Invoke-WebRequest`, which takes completely different arguments and fails confusingly.
+Refresh the visitors page in the browser. Ada is there.
+
+**On Windows:** type `curl.exe` — in PowerShell, bare `curl` is an alias for a different
+command. And keep the quotes around `"@visitor.json"`; an unquoted `@` is a PowerShell
+operator.
+
+Now edit `visitor.json`, run the command again, refresh. You just changed data in a
+database by editing a text file and sending it over HTTP. That is the whole idea of an
+API; the front end you build in week 12 does nothing more than this.
 
 ## B — What Compose gave you that Example 5 did not
 
