@@ -1,0 +1,60 @@
+# Homework 6. One image (see Dockerfile), two ways to run it.
+#
+#   docker compose watch                 the app, at http://localhost:8010 -- edits sync in
+#   docker compose run --rm test         the checks, in the terminal
+#   docker compose down                  stop
+#
+# Edits to app/, routes/, resources/, public/ and tests/ show up without a rebuild: PHP
+# reads the files again on every request, so the next page load sees your change.
+
+name: itws2110-hw6
+
+x-source: &source
+  - ./app:/app/app
+  - ./routes:/app/routes
+  - ./resources:/app/resources
+  - ./public:/app/public
+  - ./tests:/app/tests
+
+services:
+  # The app. Long-running, so it is started with `docker compose watch`: save a file and
+  # Compose copies it into the container ("Syncing"). Change composer.json or the
+  # Dockerfile and it rebuilds instead.
+  app:
+    build: .
+    image: itws2110-hw6-laravel
+    ports:
+      - "${APP_PORT:-8010}:8000"
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /app/app
+        - action: sync
+          path: ./routes
+          target: /app/routes
+        - action: sync
+          path: ./resources
+          target: /app/resources
+        - action: sync
+          path: ./public
+          target: /app/public
+        - action: sync
+          path: ./tests
+          target: /app/tests
+        - action: rebuild
+          path: ./composer.json
+        - action: rebuild
+          path: ./composer.lock
+        - action: rebuild
+          path: ./Dockerfile
+
+  # The checks, in the terminal. One-shot: it runs and exits. It bind-mounts your
+  # source, so it always sees your latest save. `profiles: [test]` keeps
+  # `docker compose watch` from starting it.
+  test:
+    image: itws2110-hw6-laravel
+    build: .
+    profiles: [test]
+    volumes: *source
+    command: php artisan test

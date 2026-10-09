@@ -1,0 +1,21 @@
+/* Styles for the to-do pages -- supplied. Plain CSS, no build step. Yours to change. */
+:root { --ink: #121d23; --teal: #027a88; --muted: #46565e; --card: #eef4f3; --rule: #c9d6d3; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: #fff; line-height: 1.5; }
+.site-nav { display: flex; gap: 1.25rem; padding: .75rem 1.5rem; border-bottom: 1px solid var(--rule); }
+a { color: var(--teal); }
+.site-nav a { font-weight: 600; text-decoration: none; }
+.page { max-width: 44rem; margin: 0 auto; padding: 1.5rem; }
+h1 { font-size: 2rem; margin: .25rem 0 1rem; }
+.kicker { color: var(--teal); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: .8rem; margin: 0; }
+.todos { list-style: none; padding: 0; margin: 1rem 0; }
+.todos li { display: flex; justify-content: space-between; gap: 1rem; padding: .6rem .9rem; margin: .4rem 0; background: var(--card); border-radius: .4rem; }
+.todos li.done .title, .todos li.done .title a { color: var(--muted); text-decoration: line-through; }
+.status { color: var(--muted); font-size: .9rem; }
+nav[aria-label="Filter"] { display: flex; gap: .5rem; }
+nav[aria-label="Filter"] a { padding: .3rem .8rem; border: 1px solid var(--rule); border-radius: .4rem; text-decoration: none; }
+nav[aria-label="Filter"] a[aria-current="page"] { background: var(--teal); border-color: var(--teal); color: #fff; }
+dl { display: grid; grid-template-columns: max-content 1fr; gap: .4rem 1rem; }
+dt { font-weight: 700; }
+dd { margin: 0; }
+code { background: var(--card); padding: 0 .25rem; border-radius: .25rem; }
