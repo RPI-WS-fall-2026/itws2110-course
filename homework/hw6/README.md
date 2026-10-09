@@ -49,9 +49,7 @@ Read these four files before you change anything. They are short.
 
 Each to-do is an array: `['id' => 1, 'title' => 'Buy rice', 'done' => false, 'due' => '2026-10-12', 'notes' => '...']`.
 
-**Don't type a to-do into a page.** Everything a page shows about a to-do has to come from
-`TodoList`. The grader runs your app with its own `TodoList.php`, holding different to-dos
-with different ids, so a page that says "Buy rice" because you wrote "Buy rice" won't pass.
+
 
 ---
 
@@ -65,17 +63,12 @@ with different ids, so a page that says "Buy rice" because you wrote "Buy rice" 
 | 4 | **Named routes**, and links written with `route()` | 7 | 15 |
 | 5 | Write-up | | 15 |
 
-Do them in order. Each one builds on the one before.
 
 ### 1. A controller for the list · 15
 
 The `/todos` route in `routes/web.php` does its work in a function written right there.
 Move that function's body into `TodoController`'s `index()` method, and replace the route
-with one line that points at it:
-
-```php
-Route::get('/todos', [TodoController::class, 'index']);
-```
+with one line that points at it.
 
 The route's function got its to-dos by asking for them: `function (TodoList $todos)`. A
 controller method asks the same way: `public function index(TodoList $todos)`. Laravel
