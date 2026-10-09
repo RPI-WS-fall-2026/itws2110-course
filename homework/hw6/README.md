@@ -53,6 +53,20 @@ Each to-do is an array: `['id' => 1, 'title' => 'Buy rice', 'done' => false, 'du
 
 ---
 
+## What it looks like when you're done
+
+The list at `/todos?status=active`, after Parts 1, 3 and 4:
+
+![The finished list page. A bar across the top with the links Home and To-dos. The heading "To-dos", the line "Showing 4 of 6", and three filter links: All, Active and Done, with Active filled in as the current one. Below them four to-dos, each a link with the word "active" at the right: Buy rice, Wash apples, Return library books, Plan Friday dinner.](todo-list-example.png)
+
+The page for one to-do, `/todos/3`, after Parts 2 and 4:
+
+![The finished page for one to-do. The same bar across the top. The heading "Wash apples", then the lines "Status: active", "Due: 2026-10-10" and the notes, where the b tags around the word "cold" show as plain characters, not as bold text. Last, a link: "Back to the list".](todo-page-example.png)
+
+Your styling doesn't have to match; the words and the links on the page do.
+
+---
+
 ## The five parts
 
 | # | What you build | The workshop drill that practices it | Points |
