@@ -1,0 +1,131 @@
+# Floor Pantry -- the whole system, one file (PROJECT_v3.pdf, Part 1).
+#
+#   cp .env.example .env
+#   docker compose watch             the app at http://localhost:5181 -- edits sync in
+#   docker compose run --rm unit     PHPUnit: the rules (no database)
+#   docker compose run --rm api      Playwright: every endpoint, success and each error
+#   docker compose run --rm e2e      Playwright: the two key pages in Chromium
+#   docker compose down              stop (add -v to throw the database away)
+#
+# The Laravel service is called `app` (as in HW7), because `api` is the name the
+# project PDF gives the API test suite.
+
+name: pantry-example-final
+
+services:
+  # MySQL. Only `app` talks to it, by its service name, so it publishes no port.
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-pantry}
+      MYSQL_USER: ${DB_USERNAME:-pantry}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-change-me}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-change-me-too}
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+
+  # The Laravel API (api/). On start it rebuilds the tables and seeds them (see its
+  # Dockerfile), so every `watch` begins from the same data.
+  app:
+    build: ./api
+    image: pantry-example-final-app
+    environment:
+      DB_HOST: db
+      DB_DATABASE: ${DB_DATABASE:-pantry}
+      DB_USERNAME: ${DB_USERNAME:-pantry}
+      DB_PASSWORD: ${DB_PASSWORD:-change-me}
+      SANCTUM_STATEFUL_DOMAINS: localhost:${WEB_PORT:-5181},web:5173
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://localhost:8000/up') === false ? 1 : 0);"]
+      interval: 3s
+      retries: 40
+    develop:
+      watch:
+        - { action: sync, path: ./api/app, target: /app/app }
+        - { action: sync, path: ./api/routes, target: /app/routes }
+        - { action: sync, path: ./api/config, target: /app/config }
+        - { action: sync, path: ./api/database, target: /app/database }
+        - { action: sync, path: ./api/tests, target: /app/tests }
+        - { action: rebuild, path: ./api/composer.json }
+        - { action: rebuild, path: ./api/composer.lock }
+        - { action: rebuild, path: ./api/Dockerfile }
+
+  # The React front end (web/). Vite serves it and forwards /api and /sanctum to `app`,
+  # so the browser sees one address and the login cookie just works.
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.dev
+    image: pantry-example-final-web
+    ports:
+      - "${WEB_PORT:-5181}:5173"
+    environment:
+      API_URL: http://app:8000
+    depends_on:
+      app:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:5173').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 3s
+      retries: 20
+    develop:
+      watch:
+        - { action: sync, path: ./web/src, target: /app/src }
+        - { action: sync, path: ./web/index.html, target: /app/index.html }
+        - { action: sync+restart, path: ./web/vite.config.js, target: /app/vite.config.js }
+        - { action: rebuild, path: ./web/package.json }
+        - { action: rebuild, path: ./web/package-lock.json }
+
+  # ---- The three test suites. `profiles: [test]` keeps `watch` from starting them. ----
+
+  unit:
+    image: pantry-example-final-app
+    build: ./api
+    profiles: [test]
+    volumes:
+      - ./api/app:/app/app
+      - ./api/tests:/app/tests
+    command: php artisan test --testsuite=Unit
+
+  api:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.test
+    image: pantry-example-final-test
+    profiles: [test]
+    environment:
+      BASE_URL: http://web:5173
+    volumes:
+      - ./web/tests:/app/tests
+      - ./web/test-results:/app/test-results
+    depends_on:
+      web:
+        condition: service_healthy
+    command: npx playwright test --project=api
+
+  e2e:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.test
+    image: pantry-example-final-test
+    profiles: [test]
+    environment:
+      BASE_URL: http://web:5173
+    volumes:
+      - ./web/tests:/app/tests
+      - ./web/test-results:/app/test-results
+    depends_on:
+      web:
+        condition: service_healthy
+    command: npx playwright test --project=e2e
+
+volumes:
+  dbdata:

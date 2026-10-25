@@ -1,0 +1,9 @@
+# The front end, for `docker compose watch`. Debian-based, like the course workshops.
+# node_modules is installed here, inside the image, so nobody needs Node on a laptop.
+FROM node:22-bookworm-slim
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
+EXPOSE 5173
+CMD ["npx", "vite", "--host", "0.0.0.0", "--port", "5173"]

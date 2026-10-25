@@ -141,9 +141,8 @@ browse page (HW 2 taught it) run green from `docker compose run --rm e2e`. Swapp
 be a one-file change; if it is not, the prototype was not written against the contract.
 
 Every page that loads data needs a **loading state and an error state**, and the two key pages need a way to move
-between them. Neither is in the homeworks yet; the **[midterm appendix](MIDTERM_APPENDIX.md)** has a working example
-of each — a fake-data module, a page with loading, error and empty states, a form that shows `422` messages, and
-how to make a load fail on purpose for the lab demo.
+between them. The **[midterm appendix](MIDTERM_APPENDIX.md)** is a worked example of what is expected:
+a fake-data module, a page that reads it, a form that shows validation messages, and both ways to move between pages.
 
 **2. The API design.** `API.md` filled in: every field of the resource with its type and
 validation rules, the five endpoints with request and response bodies, which need login and

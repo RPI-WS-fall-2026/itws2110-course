@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| **Tue 10/27** | Forms, validation, sessions and flash messages, and CSRF tokens. Until now the to-do list was read-only; this is the week it takes input. HTTP forgets you between requests, so how does a site remember that you are logged in, or that your last form had an error? Cookies and sessions. And if the browser sends your cookie automatically, what stops another site from sending a form as you? CSRF tokens. |
+| **Tue 10/27** | **Project work day.** No lecture: I am travelling. Come to class and work on your project with your team. The two examples in [`project/`](../project/) show where you should be: [`pantry-example-midterm`](../project/pantry-example-midterm/) for Friday, and [`pantry-example-final`](../project/pantry-example-final/) for the end of the term. |
 | **Fri 10/30** | Authentication and authorization: who are you, and what are you allowed to do? Password storage, Laravel's starter kits, middleware that guards routes, and policies that decide who may edit what. **Project midterm in lab** (front-end prototype and API design). **[Homework 7](../homework/hw7/README.md) assigned** — the to-do list on a database: a migration, relationships, the N+1, and a test of your own. Due Fri 11/6. |
 
 ---
@@ -17,20 +17,21 @@ A cookie is the browser's way of saying "it's me again". A session is the server
 behind that cookie. Both make logging in possible, and both open a door that this week's
 readings show you how to close.
 
-About 40 minutes before Tuesday and 30 before Friday. Each item says which sections to read
-and what to come in able to explain.
+Tuesday is a project work day, so readings 1–3 are not due this week. Read them before
+Homework 8 (forms and authentication, assigned Fri 11/6). Readings 4 and 5 are for Friday,
+about 30 minutes. Each item says which sections to read and what to come in able to explain.
 
 | | Reading | When |
 |---|---|---|
-| **Required** | 1. MDN, *Using HTTP cookies* — four sections | before **Tuesday** |
-| **Required** | 2. OWASP, *CSRF Prevention Cheat Sheet* — three sections | before **Tuesday** |
-| **Required** | 3. Laravel docs, *Validation*, *CSRF Protection* and *Session* — the sections below | before **Tuesday**, alongside the workshop |
+| **Required** | 1. MDN, *Using HTTP cookies* — four sections | before **Homework 8** |
+| **Required** | 2. OWASP, *CSRF Prevention Cheat Sheet* — three sections | before **Homework 8** |
+| **Required** | 3. Laravel docs, *Validation*, *CSRF Protection* and *Session* — the sections below | before **Homework 8** |
 | **Required** | 4. Laravel docs, *Authentication* and *Authorization* — the sections below | before **Friday** |
 | **Required** | 5. OWASP, *Password Storage Cheat Sheet* — the first half | before **Friday** |
 | Optional | 6. RFC 6265, section 8, *Security Considerations* | any time this week |
 | Optional | 7. Stauffer, *Laravel: Up & Running*, chapters 7 and 9 | alongside Homework 8 |
 
-### 1. MDN, *Using HTTP cookies* — required, before Tuesday
+### 1. MDN, *Using HTTP cookies* — required, before Homework 8
 
 [Read it on MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies)
 
@@ -39,10 +40,10 @@ and what to come in able to explain.
 | *What cookies are used for*; *Creating, removing, and updating cookies*; *Security* (all of it: `HttpOnly`, `Secure`, `Domain`/`Path`, `SameSite`, prefixes) | *Privacy and tracking*, *Cookie-related regulations* |
 
 Come in able to say what each of `HttpOnly`, `Secure` and `SameSite` protects against, in
-one sentence each. Laravel sets all three on its session cookie for you; on Tuesday you will
+one sentence each. Laravel sets all three on its session cookie for you; you can
 see them in the browser's developer tools.
 
-### 2. OWASP, *Cross-Site Request Forgery Prevention Cheat Sheet* — required, before Tuesday
+### 2. OWASP, *Cross-Site Request Forgery Prevention Cheat Sheet* — required, before Homework 8
 
 [Read it on owasp.org](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
 
@@ -55,9 +56,9 @@ made the request**. Come in able to explain why a hidden token in the form stops
 why the attacker's page cannot read the token. That is what Laravel's `@csrf` puts in
 every form.
 
-### 3. Laravel docs — required, before Tuesday
+### 3. Laravel docs — required, before Homework 8
 
-Three pages, read as the reference for Tuesday's workshop. Each is short in the parts listed.
+Three pages, read as the reference for Homework 8. Each is short in the parts listed.
 
 | Page | Read | Skip, for now |
 |---|---|---|
@@ -65,7 +66,7 @@ Three pages, read as the reference for Tuesday's workshop. Each is short in the 
 | [CSRF Protection](https://laravel.com/docs/13.x/csrf) | *Introduction*, *Preventing CSRF Requests* | excluding URIs, the `X-CSRF-TOKEN` headers (they matter in week 12 with React) |
 | [Session](https://laravel.com/docs/13.x/session) | *Interacting With the Session*: *Retrieving Data*, *Storing Data*, *Flash Data*, *Regenerating the Session ID* | configuration and drivers, cache, blocking, custom drivers |
 
-The quickstart is the whole loop you will build on Tuesday: a form posts, `validate()`
+The quickstart is the whole loop you will build in Homework 8: a form posts, `validate()`
 checks it, and on failure Laravel sends the browser back to the form with the errors and the
 old input. Notice how: the errors ride along in the session as **flash data**, which lasts
 for exactly one more request.
@@ -106,7 +107,7 @@ themselves in 2011.
 [Read it through the RPI library](https://learning-oreilly-com.libproxy.rpi.edu/library/view/laravel-up/9781098153250/)
 — sign in with your RPI credentials when prompted.
 
-Chapter 7, *Collecting and Handling User Data* (requests and validation), for Tuesday and
+Chapter 7, *Collecting and Handling User Data* (requests and validation), for
 Homework 8. Chapter 9, *User Authentication and Authorization*, for Friday. The book was
 written for Laravel 10 and describes Breeze, which Laravel 13 replaced with its starter kits;
 where the book and the class code disagree, the class code is right.
@@ -117,5 +118,4 @@ where the book and the class code disagree, the class code is right.
 
 | | Due |
 |---|---|
-| **In-class** — your work from Tuesday's session, pushed to your repo | **Tue 10/27, end of class** |
 | **Project midterm** — front-end prototype and API design ([the project page](../project/README.md)) | **Fri 10/30, in lab** |

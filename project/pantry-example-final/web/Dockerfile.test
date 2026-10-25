@@ -1,0 +1,7 @@
+# One image for the api and e2e suites: Playwright and Chromium.
+# The tag must match "@playwright/test" in package.json.
+FROM mcr.microsoft.com/playwright:v1.62.1-noble
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY playwright.config.js ./

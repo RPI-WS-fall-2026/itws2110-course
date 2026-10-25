@@ -1,0 +1,40 @@
+# Floor Pantry -- the midterm prototype.
+#
+#   cp .env.example .env
+#   docker compose watch      the prototype at http://localhost:5181 -- edits sync in
+#   docker compose down       stop
+#
+# Week 12 adds: api (Laravel), db (MySQL), and the test services.
+
+name: pantry-example
+
+services:
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.dev
+    image: pantry-example-web
+    ports:
+      - "${WEB_PORT:-5181}:5173"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:5173').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 3s
+      retries: 20
+    develop:
+      watch:
+        # Source files: copied into the running container; Vite reloads them.
+        - action: sync
+          path: ./web/src
+          target: /app/src
+        - action: sync
+          path: ./web/index.html
+          target: /app/index.html
+        # Config Vite reads once at start-up: copy, then restart.
+        - action: sync+restart
+          path: ./web/vite.config.js
+          target: /app/vite.config.js
+        # A new package means a new npm ci: rebuild the image.
+        - action: rebuild
+          path: ./web/package.json
+        - action: rebuild
+          path: ./web/package-lock.json
