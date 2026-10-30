@@ -2,6 +2,10 @@
 
 **Due Friday 11/6, 11:59 PM. Team homework, in your team repo. Everyone commits.**
 
+> [!IMPORTANT]
+> 100% requires that the team member with the fewest commits made a substantial contribution.
+> Otherwise the team's maximum is 90%. Details below.
+
 Your midterm is laid out like
 [`project/pantry-example-midterm`](../../project/pantry-example-midterm/): a `web/` folder with
 React pages reading fake data, and a `docker-compose.yml`. The goal of the project is the layout
@@ -13,6 +17,11 @@ come in Homework 8.
 
 There is no starter and no autograder this time. We go through each team's `api/` together in
 class the week after it is due. Bring it running.
+
+**Everyone commits, and it counts.** When we review your `api/`, we look at `git log`. For the
+team to get 100%, the member with the fewest commits must have made a substantial contribution:
+a migration, the model, the seeder, or a route of their own, not a typo fix. Otherwise the
+team's maximum is 90%.
 
 The example below uses a resource called `Review` at `/api/reviews`. Use your own name.
 
