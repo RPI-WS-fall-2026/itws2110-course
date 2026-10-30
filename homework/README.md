@@ -8,4 +8,4 @@ Assignments are released here as the semester goes.
 - [Homework 4](hw4/) — React components
 - [Homework 5](hw5/) — a to-do list: where state lives, and two tests of your own
 - [Homework 6](hw6/) — the to-do list in Laravel: routes, a controller and Blade templates
-- [Homework 7](hw7/) — the to-do list on a database: a migration, Eloquent relationships, the N+1, and a test of your own
+- [Homework 7](hw7/README.md) — your team project's back end: the table, model and seed data for your core resource, and the five routes from `API.md`
