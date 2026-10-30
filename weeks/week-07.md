@@ -4,8 +4,8 @@
 
 | | |
 |---|---|
-| **Tue 10/6** | Laravel I: what a framework buys you. The patterns behind every web framework — a front controller, a routing table, MVC, templates that escape by default, request objects handed to your code — each one a job week 3's `index.php` did by hand. Then Laravel's version of each. Drills 1–5 of the [week 7 workshop](../inclass/wk7/laravel/) for the last part of class. **In-class: push your copy of the workshop to your repo at the end of class**, with whatever you finished ([how](../inclass/wk7/README.md)). |
-| **Fri 10/9** | Laravel II: controllers, requests, and HTTP tests — drills 6–9 of the same workshop, then reading the drill checks as tests. *Quiz 1 review.* **Homework 5 due. [Homework 6](../homework/hw6/README.md) assigned** — the to-do list in Laravel, due Fri 10/23. |
+| **Tue 10/6** | Laravel I: what a framework buys you. The patterns behind every web framework — a front controller, a routing table, MVC, templates that escape by default, request objects handed to your code — each one a job week 3's `index.php` did by hand. Then Laravel's version of each. Drills 1–5 of the [week 7 workshop](../inclass/wk7/laravel/) for the last part of class. **In-class: push your copy of the workshop to your repo at the end of class**, with whatever you finished ([how](../inclass/wk7/README.md)). [Slides](../slides/12_laravel_framework.pdf) · [Homework 5 walkthrough](../slides/11b_hw5_walkthrough.pdf) |
+| **Fri 10/9** | Laravel II: controllers, requests, and HTTP tests — drills 6–9 of the same workshop, then reading the drill checks as tests. *Quiz 1 review.* **Homework 5 due. [Homework 6](../homework/hw6/README.md) assigned** — the to-do list in Laravel, due Fri 10/23. [Quiz 1 review slides](../slides/13_quiz1_review.pdf) |
 
 Both days use one new folder, [`inclass/wk7/laravel/`](../inclass/wk7/laravel/). It runs in
 Docker like week 3 — no PHP or Composer to install. Build it **before Tuesday**; the first run

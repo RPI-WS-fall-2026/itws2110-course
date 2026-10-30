@@ -4,8 +4,8 @@
 
 | | |
 |---|---|
-| **Tue 10/20** | ORM I: Eloquent, migrations and seeders — the schema as code. Objects and tables are different shapes; an ORM is the layer where they meet. Active Record, which is what Eloquent is. Then drills 1–5 of the [week 9 workshop](../inclass/wk9/laravel/), and 10–11, your own model from `make:model`, if you finish. **In-class: push your copy of the workshop to your repo at the end of class**, with whatever you finished ([how](../inclass/wk9/README.md)). |
-| **Fri 10/23** | ORM II: relationships, eager loading and the N+1 problem — drills 6–9 and 12 of the same workshop — then database testing: reading the drill checks as tests. **Homework 6 due.** No new homework this week: [Homework 7](../homework/hw7/README.md), your team project's database and API routes, is assigned next Friday, 10/30, and due Fri 11/6. |
+| **Tue 10/20** | ORM I: Eloquent, migrations and seeders — the schema as code. Objects and tables are different shapes; an ORM is the layer where they meet. Active Record, which is what Eloquent is. Then drills 1–5 of the [week 9 workshop](../inclass/wk9/laravel/), and 10–11, your own model from `make:model`, if you finish. **In-class: push your copy of the workshop to your repo at the end of class**, with whatever you finished ([how](../inclass/wk9/README.md)). [Slides](../slides/15_eloquent_orm_final.pdf) |
+| **Fri 10/23** | ORM II: relationships, eager loading and the N+1 problem — drills 6–9 and 12 of the same workshop — then database testing: reading the drill checks as tests. **Homework 6 due.** No new homework this week: [Homework 7](../homework/hw7/README.md), your team project's database and API routes, is assigned next Friday, 10/30, and due Fri 11/6. [Slides](../slides/16_eloquent_relationships_final.pdf) |
 
 Both days use one new folder, [`inclass/wk9/laravel/`](../inclass/wk9/laravel/). It runs in
 Docker like week 7, with a MySQL container beside the app. Build it **before Tuesday**; the

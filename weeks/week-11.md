@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| **Tue 11/3** | Security. The OWASP Top 10:2025 as a map of what goes wrong; then the six holes you will fix on Friday, each shown first as an attack and then as the one line that closes it: injection (SQL and otherwise), cross-site scripting, cross-site request forgery, security headers and TLS, secrets, and the supply chain. Every example is code you have already written: the to-do list from Homework 6 and the pantry project. |
+| **Tue 11/3** | Security. The OWASP Top 10:2025 as a map of what goes wrong; then the six holes you will fix on Friday, each shown first as an attack and then as the one line that closes it: injection (SQL and otherwise), cross-site scripting, cross-site request forgery, security headers and TLS, secrets, and the supply chain. Every example is code you have already written: the to-do list from Homework 6 and the pantry project. [Slides](../slides/11_security.pdf) |
 | **Fri 11/6** | **Security Lab.** Six drills in one small Laravel app, [`inclass/wk11/laravel/`](../inclass/wk11/laravel/): find and fix an SQL injection, an XSS, a missing CSRF token, a secret committed in code and a dependency with a published advisory, then add security headers. Same **Check result** button as weeks 7 and 9. **In-class: push your copy of the workshop to your repo at the end of class**, with whatever you finished ([how](../inclass/wk11/README.md)). **Homework 7 due.** Homework 8 (forms and authentication) is assigned; due Fri 11/13. |
 
 Build the lab folder **before Friday**. It runs like week 9, with a MySQL container beside the app;
