@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| **Tue 11/3** | **Security.** The OWASP Top 10:2025, then the six holes you fix on Friday: injection, XSS, CSRF, secrets, the supply chain, and security headers. Each is shown as an attack, then as the line that closes it. [Slides](../slides/19_security.pdf) · [OWASP Top 10 reference](../slides/19b_owasp_top10.pdf) |
+| **Tue 11/3** | **Security.** The OWASP Top 10:2025, one slide per entry, then the six holes you fix on Friday: injection, XSS, CSRF, secrets, the supply chain, and security headers. Each is shown as an attack, then as the line that closes it, and the middleware you have been using all along. [Slides](../slides/19_security_v2.pdf) |
 | **Fri 11/6** | **Security Lab.** Six drills in one small Laravel app, [`inclass/wk11/laravel/`](../inclass/wk11/laravel/), with the **Check result** button. Push your copy to your repo at the end of class ([how](../inclass/wk11/README.md)). **Homework 7 due.** [Homework 8](../homework/hw8/README.md) assigned: the same six defenses on your team's `api/`; due Fri 11/13. |
 
 Build the lab folder **before Friday**. Stop the week 9 workshop or Homework 7 first if it is

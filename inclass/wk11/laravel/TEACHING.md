@@ -4,7 +4,7 @@
 
 | Part | Course session | Suggested allocation |
 |---|---|---|
-| Lecture: the Top 10 and the six holes | 19, Tue 11/3 | the deck ([`slides/19_security.pdf`](../../slides/19_security.pdf)) |
+| Lecture: the Top 10 and the six holes | 19, Tue 11/3 | the deck ([`slides/19_security_v2.pdf`](../../slides/19_security_v2.pdf)) |
 | Drills 1–6 | 20, Fri 11/6 (Security Lab) | ~10 min setup recap, then ~50 min for the six drills in pairs, with drills 1 and 3 demoed on the projector |
 
 The Tuesday lecture introduces every one of these six as an attack and a one-line fix; Friday

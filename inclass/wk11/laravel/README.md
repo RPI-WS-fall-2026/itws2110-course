@@ -192,21 +192,22 @@ Route::get('/todos', [TodoController::class, 'index'])
     ->name('todos.index');
 ```
 
-Look at both answers:
+Look at both answers (the `grep` keeps only the four headers):
 
 ```bash
-curl -si http://localhost:8000/todos | head -20
+curl -si http://localhost:8000/todos | grep -i -E '^(x-content-type-options|x-frame-options|content-security-policy|strict-transport-security)'
 ```
 
 ```bash
-curl -si http://localhost:8000/ | head -20
+curl -si http://localhost:8000/ | grep -i -E '^(x-content-type-options|x-frame-options|content-security-policy|strict-transport-security)'
 ```
 
-The to-do list carries the four headers; the drills page carries none. Press **Check result**:
-it fails and says exactly that. A route middleware runs for that route.
+The first prints four lines; the second prints nothing. Press **Check result**: it fails and
+says the headers are on `/todos` only. A route middleware runs for that route.
 
-**4. Put it on every route.** Take the `->middleware(...)` line out of the route again and
-register the middleware once, in `bootstrap/app.php`:
+**4. Put it on every route.** Undo step 3: the `todos.index` line goes back to one line, with
+no `->middleware(...)`. Then register the middleware once, in `bootstrap/app.php`, inside
+`withMiddleware`, replacing the commented `DRILL 6` line:
 
 ```php
 $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
