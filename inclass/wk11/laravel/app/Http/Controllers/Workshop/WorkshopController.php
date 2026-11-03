@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Process;
 // the same file `docker compose run --rm test` runs. The checks for drills 1, 2 and 6 use
 // an in-memory database and the live app; the checks for drills 3, 4 and 5 read the files
 // you changed (the form, the config, the lockfile), because those fixes are about what is
-// written down, not what a request returns.
+// written down, not what a request returns. Drill 7 is optional, for pairs who finish.
 class WorkshopController extends Controller
 {
     public const DRILLS = [
@@ -62,12 +62,21 @@ class WorkshopController extends Controller
         ],
         6 => [
             'group' => 'The platform', 'title' => 'Security headers', 'open' => '/',
-            'file' => 'app/Http/Middleware/SecurityHeaders.php and bootstrap/app.php',
+            'file' => 'app/Http/Middleware/SecurityHeaders.php (you generate it), routes/web.php, then bootstrap/app.php',
             'goal' => 'Every response carries the four headers that tell the browser what to refuse.',
             'owasp' => 'A02:2025 Security Misconfiguration',
             'attack' => "The app sends no security headers. A browser is left to guess: it will render the page inside another site's <iframe> (clickjacking), run scripts from anywhere, and try to sniff a file's type. Each missing header is a default that favours the attacker.",
             'idea' => "Four headers, four refusals: X-Content-Type-Options stops MIME sniffing, X-Frame-Options stops framing, Content-Security-Policy limits where scripts may come from, Strict-Transport-Security forces HTTPS. These are the four MDN guides you read. A middleware sets them on every response.",
-            'hint' => "Fill in app/Http/Middleware/SecurityHeaders.php (the four \$response->headers->set(...) lines), then register it in bootstrap/app.php:\n    \$middleware->append(\\App\\Http\\Middleware\\SecurityHeaders::class);",
+            'hint' => "Four steps, as on the Laravel Middleware page. (1) Generate it, in a second terminal:\n    docker compose run --rm test php artisan make:middleware SecurityHeaders\n(2) In the new handle(): \$response = \$next(\$request); then four \$response->headers->set(...) lines; return \$response. (3) Put it on one route in routes/web.php with ->middleware(\\App\\Http\\Middleware\\SecurityHeaders::class) and compare curl -si on /todos and on /. (4) Take that off and register it for every route in bootstrap/app.php:\n    \$middleware->append(\\App\\Http\\Middleware\\SecurityHeaders::class);",
+        ],
+        7 => [
+            'group' => 'If you finish', 'title' => 'Rate limiting: a script that never gets told no', 'open' => '/todos?q=rice',
+            'file' => 'app/Providers/AppServiceProvider.php and routes/web.php',
+            'goal' => 'Twenty searches a minute from one address are answered; the twenty-first gets 429 Too Many Requests.',
+            'owasp' => 'A07:2025 Authentication Failures (no limit on automated guessing)',
+            'attack' => "In a second terminal:\n    for i in \$(seq 1 25); do curl -s -o /dev/null -w '%{http_code} ' 'http://localhost:8000/todos?q=guess'; done; echo\nTwenty-five 200s. A script can search as fast as it likes, and nothing counts. Point the same loop at a login form and it is a password guesser (week 12).",
+            'idea' => "A limit is a middleware with an argument: throttle:search means Laravel's ThrottleRequests class, using the limit you named 'search'. It counts requests per key (here the address) in the cache and answers 429 with a Retry-After header once the count is over, before your controller runs. Week 12 puts throttle:login on the login route, keyed on email and address.",
+            'hint' => "In app/Providers/AppServiceProvider.php, inside boot():\n    RateLimiter::for('search', fn (Request \$request) => Limit::perMinute(20)->by(\$request->ip()));\n(the use lines for Limit, Request and RateLimiter are already at the top).\n\nIn routes/web.php, on the todos.index route:\n    ->middleware('throttle:search')\n\nShorthand that skips the naming: ->middleware('throttle:20,1').",
         ],
     ];
 
@@ -87,6 +96,7 @@ class WorkshopController extends Controller
         $drills = self::DRILLS;
         $drills[3]['open'] = 'http://127.0.0.1:'.request()->getPort().'/attack';
         $drills[3]['attack'] = str_replace('127.0.0.1:8000', '127.0.0.1:'.request()->getPort(), $drills[3]['attack']);
+        $drills[7]['attack'] = str_replace('localhost:8000', 'localhost:'.request()->getPort(), $drills[7]['attack']);
 
         return view('workshop.index', ['drills' => $drills]);
     }

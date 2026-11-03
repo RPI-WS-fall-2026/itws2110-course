@@ -11,7 +11,7 @@
 <main class="page workshop">
     <p class="kicker">ITWS 2110 · Laravel lab · week 11</p>
     <h1>Security: find it, then fix it</h1>
-    <p>Six holes in one to-do app. Each drill names the file to edit. <strong>See the attack
+    <p>Six holes in one to-do app, and a seventh drill for when you finish. Each drill names the file to edit. <strong>See the attack
         first</strong> (the Attack panel says how), then make the fix, save, and press
         <strong>Check result</strong> — it runs that drill's test against your files right now.
         <strong>Open</strong> shows the page in a new tab.</p>

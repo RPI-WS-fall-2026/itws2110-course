@@ -2,27 +2,34 @@
 
 namespace Tests\Feature\Drills;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 // Drill 6 -- security headers. Supplied; leave it alone. Every response must carry the four
-// headers, set by app/Http/Middleware/SecurityHeaders.php once it is registered in
-// bootstrap/app.php.
+// headers: the to-do list (step 3 puts the middleware on that one route) and the drills page
+// (step 4 appends it in bootstrap/app.php, so it runs on every route).
 class Drill6Test extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_every_response_carries_the_four_security_headers(): void
     {
-        $response = $this->get('/');
+        $this->assertFourHeaders($this->get('/todos'), '/todos', '');
+        $this->assertFourHeaders($this->get('/'), '/',
+            ' /todos has it, so the middleware is on one route only (step 3). Step 4: take it off the route and append it in bootstrap/app.php.');
+    }
 
-        $response->assertHeader('X-Content-Type-Options', 'nosniff');
-        $response->assertHeader('X-Frame-Options', 'DENY');
+    private function assertFourHeaders(TestResponse $response, string $url, string $hint): void
+    {
+        $response->assertOk();
 
-        $this->assertNotEmpty(
-            $response->headers->get('Content-Security-Policy'),
-            'No Content-Security-Policy header on the response.'
-        );
-        $this->assertNotEmpty(
-            $response->headers->get('Strict-Transport-Security'),
-            'No Strict-Transport-Security header on the response.'
-        );
+        foreach (['X-Content-Type-Options' => 'nosniff', 'X-Frame-Options' => 'DENY'] as $name => $value) {
+            $this->assertSame($value, $response->headers->get($name),
+                "No {$name}: {$value} header on {$url}.".$hint);
+        }
+        foreach (['Content-Security-Policy', 'Strict-Transport-Security'] as $name) {
+            $this->assertNotEmpty($response->headers->get($name), "No {$name} header on {$url}.".$hint);
+        }
     }
 }

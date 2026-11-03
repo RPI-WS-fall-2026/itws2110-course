@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
             ['Email the TA', false, '2026-11-07', 'Ask about the midterm regrade.'],
             // A note a stranger left on a shared list. Harmless text -- until drill 2's page
             // prints it with {!! !!} and the browser runs it.
-            ['Pantry potluck', false, null, '<script>alert(document.cookie)</script>Sign up here!'],
+            ['Pantry potluck', false, null, '<script>alert("I run in your browser now. Your cookies: " + document.cookie + ". I can read this page, post to your list as you, and send it all to my server.")</script>Sign up here!'],
             ['Return library books', false, '2026-11-14', null],
         ];
 

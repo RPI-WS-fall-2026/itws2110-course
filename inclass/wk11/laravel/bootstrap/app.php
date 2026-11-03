@@ -15,8 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // is why the attacker page at /attack can post to it. Delete this line.
         $middleware->validateCsrfTokens(except: ['todos']);
 
-        // DRILL 6: once you have written app/Http/Middleware/SecurityHeaders.php, register it
-        // here so it runs on every response:
+        // DRILL 6, step 4: once you have generated app/Http/Middleware/SecurityHeaders.php and
+        // tried it on one route, register it here so it runs on every response:
         // $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

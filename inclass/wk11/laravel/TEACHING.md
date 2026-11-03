@@ -47,7 +47,8 @@ doing together on the projector are 1, 3 and 6.
 | 3 | `/attack`, a stand-in for another site, POSTs to `/todos` on its own | `@csrf` in the form **and** remove the CSRF `except` | A01 Broken Access Control: a token the attacker can't read |
 | 4 | an API key sits in `config/pantry.php`, a tracked file | `env('PANTRY_API_KEY')` + `.env.example` | A02 Misconfiguration: secrets live in `.env`, not git |
 | 5 | `composer audit` flags `firebase/php-jwt 5.5.1` (critical) | `composer remove firebase/php-jwt` | A03 Supply Chain: you ship code you didn't write |
-| 6 | no security headers; the browser guesses in the attacker's favour | a `SecurityHeaders` middleware, four headers | A02 Misconfiguration: tell the browser what to refuse |
+| 6 | no security headers; the browser guesses in the attacker's favour | generate a `SecurityHeaders` middleware, four headers, route then global | A02 Misconfiguration: tell the browser what to refuse |
+| 7 (if they finish) | nothing counts requests; a script searches, or guesses, as fast as it likes | `RateLimiter::for('search', …)` + `throttle:search` on the route | A07 Authentication Failures: a limit is a middleware with an argument |
 
 ## The one thing to explain twice: why two drills check files, not behaviour
 
@@ -102,8 +103,17 @@ some are about what is written down.
   has a known hole. Mention the npm reading (Shai-Hulud): an install script is ordinary code
   that runs on your laptop the moment you `npm install`.
 - **Drill 6:** open the Network tab, reload, show the response has none of the four headers.
-  Add the middleware, reload, show all four. Each one is a single instruction to the browser.
-  Map them to the four MDN guides from the reading.
+  This drill is the Laravel Middleware doc page done live: generate the class with
+  `make:middleware` (through the `test` service, so the file lands on the host), set the four
+  headers, put it on the `/todos` route only and curl both pages, then move it to `append` in
+  `bootstrap/app.php` and show all four everywhere. The Check result fails on purpose after the
+  route step and says so. Each header is a single instruction to the browser; map them to the
+  four MDN guides from the reading.
+- **Drill 7, for pairs who finish:** the curl loop prints 25 `200`s; after the two edits, 20
+  then `429`. The point to land: they did not write this middleware; the colon passes it an
+  argument, and the limit is named once in the provider. Week 12 does the same on the login
+  route, keyed on email and address. Warn them: once they hit the limit, their own to-do page
+  is refused for a minute.
 
 ## How the checks work
 

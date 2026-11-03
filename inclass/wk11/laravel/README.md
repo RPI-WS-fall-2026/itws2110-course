@@ -12,6 +12,7 @@ attack first**, watch it work, then make the one change that closes it.
 | 1–2 | Input you don't trust | a controller, a view | the **Check result** button |
 | 3–4 | Requests and secrets | a form, `bootstrap/app.php`, a config | the **Check result** button |
 | 5–6 | The platform | the dependencies, a middleware | the **Check result** button |
+| 7 | If you finish | a route, a provider | the **Check result** button |
 
 The loop is the same as weeks 7 and 9: see the attack, change one thing, save, check,
 explain it to a partner.
@@ -40,9 +41,10 @@ Port 8000 taken? `APP_PORT=8001 docker compose watch`, then use http://localhost
 |---|---|
 | `app/Http/Controllers/TodoController.php` | The to-do pages. **Drills 1 and 3.** |
 | `resources/views/todos/` | The to-do views. **Drills 2 and 3.** |
-| `bootstrap/app.php` | Where middleware is turned on and off. **Drills 3 and 6.** |
+| `bootstrap/app.php` | Where middleware is turned on and off for every route. **Drills 3 and 6.** |
+| `routes/web.php` | The routes. **Drill 6** puts a middleware on one of them, then takes it off again. |
 | `config/pantry.php` | A config file with a secret in it. **Drill 4.** |
-| `app/Http/Middleware/SecurityHeaders.php` | An empty middleware to fill in. **Drill 6.** |
+| `app/Http/Middleware/` | Does not exist yet. **Drill 6** generates a middleware into it with `artisan`. |
 | `composer.json` / `composer.lock` | The packages the app depends on. **Drill 5.** |
 | `tests/Feature/Drills/` | The checks. Each drill's **Check result** runs one of these. |
 
@@ -76,7 +78,7 @@ different about where the value travels? (You met this in week 3: `prepare()` an
 
 ### 2. XSS: a note that runs in everyone's browser · 6 minutes
 
-Open `/todos/3`. The "Pantry potluck" note holds `<script>alert(document.cookie)</script>`,
+Open `/todos/3`. The "Pantry potluck" note holds a `<script>` that pops an alert naming your cookies and what it can now do,
 typed by whoever last edited the shared list. The starter page **runs** it. In
 `resources/views/todos/show.blade.php`, change `{!! $todo->notes !!}` to `{{ $todo->notes }}`.
 
@@ -155,12 +157,64 @@ install script do on your laptop? (This week's npm reading is about exactly that
 ### 6. Security headers · 8 minutes
 
 The app sends no security headers, so the browser guesses — and its guesses favour the
-attacker. Fill in `app/Http/Middleware/SecurityHeaders.php` (four `$response->headers->set(...)`
-lines), then register it in `bootstrap/app.php`:
+attacker. This drill is the Laravel [*Middleware*](https://laravel.com/framework/docs/13.x/middleware)
+page, done on this app: define a middleware, put it on one route, then on every route.
+
+**1. Generate it.** In a second terminal. The lab image has `artisan`, and the `test` service
+shares your folder, so the new file lands in `app/Http/Middleware/` on your machine:
+
+```bash
+docker compose run --rm test php artisan make:middleware SecurityHeaders
+```
+
+Open `app/Http/Middleware/SecurityHeaders.php`: one `handle` method that passes the request on
+with `return $next($request);` and does nothing else.
+
+**2. Set the headers.** `$next($request)` returns the response. Keep it, set the four headers
+on it, then return it:
+
+```php
+$response = $next($request);
+
+$response->headers->set('X-Content-Type-Options', 'nosniff');
+$response->headers->set('X-Frame-Options', 'DENY');
+$response->headers->set('Content-Security-Policy', "default-src 'self'");
+$response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+
+return $response;
+```
+
+**3. Put it on one route.** In `routes/web.php`, add it to the to-do list only:
+
+```php
+Route::get('/todos', [TodoController::class, 'index'])
+    ->middleware(\App\Http\Middleware\SecurityHeaders::class)
+    ->name('todos.index');
+```
+
+Look at both answers:
+
+```bash
+curl -si http://localhost:8000/todos | head -20
+```
+
+```bash
+curl -si http://localhost:8000/ | head -20
+```
+
+The to-do list carries the four headers; the drills page carries none. Press **Check result**:
+it fails and says exactly that. A route middleware runs for that route.
+
+**4. Put it on every route.** Take the `->middleware(...)` line out of the route again and
+register the middleware once, in `bootstrap/app.php`:
 
 ```php
 $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
 ```
+
+Now every response carries the headers — the drills page, the to-do list, and a URL that does
+not exist. `append` puts it at the end of the global stack, which is where "after the
+response" middleware belongs.
 
 The four headers, and what each tells the browser to refuse:
 
@@ -174,9 +228,45 @@ The four headers, and what each tells the browser to refuse:
 **Done when:** the check passes — every response carries all four headers. See them yourself:
 open the browser's Network tab, reload, click the request, read the Response Headers.
 **Explain:** these four are the four MDN guides you read. Pick one and say, in a sentence, the
-attack it stops.
+attack it stops. Then: why did step 3 fail the check and step 4 pass it?
 
 ---
+
+### 7. If you finish: rate limiting · 5 minutes
+
+Nothing in the app counts requests. In a second terminal:
+
+```bash
+for i in $(seq 1 25); do curl -s -o /dev/null -w '%{http_code} ' 'http://localhost:8000/todos?q=guess'; done; echo
+```
+
+Twenty-five `200`s. A script can search as fast as it likes. Point the same loop at a login
+form and it is a password guesser; week 12 closes that one the same way. The fix is a
+middleware you do not write, with an argument: `throttle:search`. Two edits.
+
+Name the limit, in `app/Providers/AppServiceProvider.php` inside `boot()` (the `use` lines
+are already there):
+
+```php
+RateLimiter::for('search', fn (Request $request) => Limit::perMinute(20)->by($request->ip()));
+```
+
+Put it on the route, in `routes/web.php`:
+
+```php
+Route::get('/todos', [TodoController::class, 'index'])
+    ->middleware('throttle:search')
+    ->name('todos.index');
+```
+
+Run the loop again: twenty `200`s, then `429`. The to-do page itself says *Too Many
+Requests* until the minute is up — that is the cost of a limit, and why it is keyed on the
+address rather than on everyone. (`throttle:20,1` does the same without naming the limit;
+naming it lets you choose the key and reuse it.)
+
+**Done when:** the check passes — search 21 in a minute is refused with a `Retry-After`.
+**Explain:** the search is keyed on the address. What would you key a login limit on, and
+why? (Week 12's answer: the email *and* the address, together.)
 
 ## Hand it in — end of class
 
@@ -201,7 +291,11 @@ Kept going after class? Copy, paste and push again — the latest push counts.
 | Drill 4 check fails on `.env.example` | Add `PANTRY_API_KEY` to `.env.example`, not only to `.env` |
 | Drill 5 still fails after `composer remove` | Wait for the image to finish rebuilding (`Rebuilding` in the watch terminal), then check. If you ran it with `docker compose exec`, only the container's copy changed: run the `docker run … composer:2 …` command from drill 5 instead |
 | Drill 6: the Check result buttons stopped working | Reload the drills page. If it is still dead, your `Content-Security-Policy` value blocks `/workshop.js`: use `default-src 'self'` |
-| Drill 6: headers not showing | You wrote the middleware but did not `append` it in `bootstrap/app.php` |
+| Drill 6: `make:middleware` says the file already exists | You ran it twice. Open the file it made the first time |
+| Drill 6: headers on `/todos` but the check fails | That is step 3. The middleware is on one route; step 4 appends it in `bootstrap/app.php` so it runs on every route |
+| Drill 6: headers not showing anywhere | You wrote the middleware but did not `append` it in `bootstrap/app.php` |
+| Drill 7: `Rate limiter [search] is not defined` | The route names the limit but `boot()` does not define it. Add the `RateLimiter::for('search', …)` line |
+| Drill 7: the to-do page says Too Many Requests | The limit works and you hit it. Wait a minute, or raise `perMinute(20)` while you work |
 | `419 Page Expired` on the add form after drill 3 | Correct and expected on a stale tab: reload the page to get a fresh token, then add |
 
 Don't edit the tests to get a PASS.
@@ -223,4 +317,5 @@ docker compose run --rm answers    # the worked answers, on a throwaway copy: al
 - [Laravel CSRF Protection](https://laravel.com/docs/13.x/csrf) — drill 3.
 - [Laravel Configuration: Environment](https://laravel.com/docs/13.x/configuration#environment-configuration) — drill 4.
 - [composer audit](https://getcomposer.org/doc/03-cli.md#audit) · [npm audit](https://docs.npmjs.com/cli/v11/commands/npm-audit) — drill 5.
-- [MDN: Practical security implementation guides](https://developer.mozilla.org/en-US/docs/Web/Security/Practical_implementation_guides) — drill 6.
+- [Laravel Middleware](https://laravel.com/framework/docs/13.x/middleware) · [MDN: Practical security implementation guides](https://developer.mozilla.org/en-US/docs/Web/Security/Practical_implementation_guides) — drill 6.
+- [Laravel Rate Limiting](https://laravel.com/framework/docs/13.x/routing#rate-limiting) — drill 7.
