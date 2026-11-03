@@ -61,8 +61,8 @@ Weeks are linked as they are posted. Everything is due at **11:59 PM** on the da
 | — | *Fri 10/16* | *No class — follows a Monday schedule* | — |
 | **[9](weeks/week-09.md)** | Tue 10/20 · Fri 10/23 | Eloquent ORM, migrations, relationships | In-class — Tue 10/20<br>HW 6 — Fri 10/23 |
 | **[10](weeks/week-10.md)** | Tue 10/27 · Fri 10/30 | **Tue: project work day** · Fri: midterm presentations, then team time on HW 7 | **Project midterm update — Fri 10/30**<br>HW 7 assigned |
-| **[11](weeks/week-11.md)** | Tue 11/3 · Fri 11/6 | Security — OWASP Top 10, injection, XSS, CSRF, headers, supply chain | In-class — Fri 11/6<br>HW 7 — Fri 11/6 |
-| 12 | Tue 11/10 · Fri 11/13 | APIs, REST, and contracts | In-class — Tue 11/10<br>HW 8 — Fri 11/13 |
+| **[11](weeks/week-11.md)** | Tue 11/3 · Fri 11/6 | Security — OWASP Top 10, injection, XSS, CSRF, headers, supply chain; Fri: the security lab | In-class — Fri 11/6<br>HW 7 — Fri 11/6 |
+| **[12](weeks/week-12.md)** | Tue 11/10 · Fri 11/13 | Authentication — logging in, sessions vs. tokens, OAuth and single sign-on; Fri: the login lab | In-class — Fri 11/13<br>HW 8 — Fri 11/13 |
 | 13 | Tue 11/17 · Fri 11/20 | Cloud deployment | In-class — Tue 11/17<br>HW 9 — Fri 11/20 |
 | — | *11/23–27* | *Thanksgiving Break* | — |
 | 14 | Tue 12/1 · Fri 12/4 | Performance; **Quiz 2** | In-class — Tue 12/1<br>Quiz 2 — Fri 12/4 |
