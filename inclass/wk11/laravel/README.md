@@ -237,9 +237,20 @@ attack it stops. Then: why did step 3 fail the check and step 4 pass it?
 
 Nothing in the app counts requests. In a second terminal:
 
+**Mac or Linux (Terminal):**
+
 ```bash
 for i in $(seq 1 25); do curl -s -o /dev/null -w '%{http_code} ' 'http://localhost:8000/todos?q=guess'; done; echo
 ```
+
+**Windows (PowerShell):** type `curl.exe`, with the `.exe`. Plain `curl` in PowerShell is a
+different command that rejects these flags.
+
+```powershell
+1..25 | ForEach-Object { curl.exe -s -o NUL -w '%{http_code} ' 'http://localhost:8000/todos?q=guess' }; ""
+```
+
+(Git Bash or WSL on Windows can run the Mac command unchanged.)
 
 Twenty-five `200`s. A script can search as fast as it likes. Point the same loop at a login
 form and it is a password guesser; week 12 closes that one the same way. The fix is a

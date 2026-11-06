@@ -204,6 +204,9 @@ understand and trust the system from it, and on honesty.
   done, by whom, what is blocked. Ten lines. The report is written from it.
 - **Everyone commits.** Git history is part of the grade for each individual. A member with
   no commits after week 10 is graded separately from the team.
+- **AI tools, the way [AI_PROMPTS.md](AI_PROMPTS.md) says.** Output goes to `scratch/`, you
+  move it in by hand, and each stage gets a human look before the next. One AI line in each
+  week's `PROCESS.md` entry.
 - **Roles rotate or they do not — your call — but write it down.** Who runs the weekly
   check-in, who owns the deploy, who owns the tests.
 
