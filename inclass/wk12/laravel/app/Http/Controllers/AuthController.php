@@ -64,8 +64,9 @@ class AuthController extends Controller
 
         // DRILL 5: $request->all() is everything the browser sent -- including fields your
         // form does not have. Add <input name="role" value="admin"> in the developer tools
-        // and you are an admin. Create the user from the validated fields only:
-        //     $fields = $request->validate([...]);   then   User::create($fields);
+        // and you are an admin. validate() above returns only the three fields it has rules
+        // for. Keep them: type   $fields =   in front of the $request->validate([ call above
+        // (leave its rules alone), then change $request->all() below to $fields.
         $user = User::create($request->all());
 
         Auth::login($user);

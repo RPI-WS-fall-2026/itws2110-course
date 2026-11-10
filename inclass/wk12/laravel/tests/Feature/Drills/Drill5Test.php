@@ -13,11 +13,13 @@ class Drill5Test extends TestCase
 
     public function test_a_role_sent_with_the_registration_is_ignored(): void
     {
-        $this->post('/register', [
+        $response = $this->post('/register', [
             'name' => 'Mallory', 'email' => 'mallory@example.com',
             'password' => 'mallory-pass', 'password_confirmation' => 'mallory-pass',
             'role' => 'admin',
         ]);
+        $this->assertNotSame(500, $response->status(),
+            "register() crashed with a PHP error (500), so no account was made. Look at the line you edited: it should read  \$fields = \$request->validate([  with an equals sign, and the three rules inside stay as they were. Then  User::create(\$fields);");
 
         $user = User::where('email', 'mallory@example.com')->first();
         $this->assertNotNull($user, 'Registering did not create the account at all.');

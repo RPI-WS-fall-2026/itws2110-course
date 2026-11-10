@@ -165,11 +165,31 @@ the API's version of "sent to `/login`", and why is it different for an API?
 
 Open `/register`, open the developer tools, right-click the `<form>` → **Edit as HTML**, add
 `<input name="role" value="admin">` before the button, and register. You have an **Admin**
-link and every user's list. (Or: `php artisan attack admin`.) Two fixes:
+link and every user's list. (Or: `php artisan attack admin`.)
 
-- In `AuthController::register()`, keep what `validate()` returns and create from that:
-  `$fields = $request->validate([...]);` then `User::create($fields);`
-- In `app/Models/User.php`: `#[Fillable(['name', 'email', 'password'])]` — no `role`.
+`validate()` checks the three fields that have rules, and it also **returns** those three
+fields as an array. Right now `register()` throws that array away and creates the user from
+`$request->all()`, which is everything the browser sent. Two fixes, three small edits:
+
+1. In `AuthController::register()`, keep what `validate()` returns. The call and its rules are
+   already there; type `$fields = ` in front of it and change nothing else:
+
+   ```php
+   $fields = $request->validate([      // was:  $request->validate([
+       'name' => [...],                // the three rules stay exactly as they are
+       'email' => [...],
+       'password' => [...],
+   ]);
+   ```
+
+2. A few lines down, create the user from that array:
+
+   ```php
+   $user = User::create($fields);      // was:  User::create($request->all());
+   ```
+
+3. In `app/Models/User.php`, take `'role'` off the list:
+   `#[Fillable(['name', 'email', 'password'])]`
 
 **Done when:** both checks pass, and the attack reports an ordinary user and `/admin` → 403.
 **Explain:** either fix alone stops this attack. Why do both?
@@ -253,19 +273,41 @@ public function view(User $user, Todo $todo): Response
 `$user` comes from the session and `$todo->user_id` from the database. Nothing in it came from
 the request, so nothing in it can be forged.
 
-**Your turn, two files:**
+**Your turn, two files, four steps.** Try each step in the browser before the next one.
 
-1. In `app/Policies/TodoPolicy.php` (it is there, with every method saying `allow()`), write
-   `view()` as above, then `update()` and `delete()` from their rows of the table.
-2. In `TodoController::findTodo()`, look the to-do up in the **whole** table again, then ask
-   the policy. `$ability` is already passed in: `'view'` from `show()`, `'update'` from
-   `toggle()`, `'delete'` from `destroy()`.
+1. **Make the controller ask the policy.** A policy does nothing until something asks it. In
+   `TodoController::findTodo()`, **replace** drill 6's line with these three. `$ability` is
+   already passed in: `'view'` from `show()`, `'update'` from `toggle()`, `'delete'` from
+   `destroy()`.
 
    ```php
-   $todo = Todo::findOrFail($id);      // 404 if no such to-do at all
+   $todo = Todo::findOrFail($id);      // the whole table again; 404 if no such to-do at all
    Gate::authorize($ability, $todo);   // asks TodoPolicy; throws the 403 or 404 for you
    return $todo;
    ```
+
+   *Try it:* as the admin, `/todos/2` now opens. So does everything for everyone, because
+   `app/Policies/TodoPolicy.php` still says `allow()` three times. The next three steps fix that.
+
+2. **`view()`**: copy the worked row above into `TodoPolicy.php`.
+   *Try it:* as Priya, `/todos/2` is a 404 again.
+
+3. **`update()`** is **not** a copy of `view()`. Its row has three different answers, so it
+   needs three branches. Ask about the owner first:
+
+   ```php
+   public function update(User $user, Todo $todo): Response
+   {
+       // the owner     -> Response::allow()
+       // the admin     -> Response::deny('Only the owner may change a to-do.')   (403)
+       // anyone else   -> Response::denyAsNotFound()                             (404)
+   }
+   ```
+
+   *Try it:* as the admin, open `/todos/2` and press **Mark done**: 403.
+
+4. **`delete()`**: its row has the same answers as `view()`'s, so it can ask `view()`:
+   `return $this->view($user, $todo);`
 
 **Done when:** the drill 8 check passes, **and drill 6's still does**: Priya still gets 404 for
 Alex's to-do, now from the policy. As the admin, `/todos/2` opens, and **Mark done** answers 403.
@@ -298,6 +340,8 @@ docker compose run --rm test
 | `attack delete` says *There is no to-do 2* | An earlier attack deleted it. `php artisan migrate:fresh --seed`. |
 | Logged in, but `/todos/5` is a 404 as Alex | Correct after drill 6: 5 is Priya's. |
 | The Check button says the check failed to run | Is the watch terminal still running? Reload the page. |
+| Drill 5: the check says *register() crashed*, or registering shows a 500 | A typo in the first edit. The line must read `$fields = $request->validate([` with an equals sign. Leave the rules inside the brackets as they were. |
+| Drill 8: the admin presses **Mark done** and it works (no 403) | `update()` is a copy of `view()`, which allows the admin. `update()` needs three branches: the owner is allowed, the admin gets `Response::deny(...)`, anyone else gets `Response::denyAsNotFound()`. |
 | Drill 8: the admin still gets 404 on `/todos/2` | `findTodo()` still starts from `$request->user()->todos()`. Drill 8 replaces drill 6's line with `Todo::findOrFail($id)` plus `Gate::authorize(...)`. |
 | Drill 8: Priya now gets 403, not 404, and drill 6 fails | The policy returned `Response::deny()` for her. Anyone who is neither the owner nor the admin gets `Response::denyAsNotFound()`. |
 | Drill 8: everyone may do everything | `Gate::authorize($ability, $todo)` is missing from `findTodo()`, so the policy is never asked. |

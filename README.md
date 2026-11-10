@@ -66,7 +66,7 @@ Weeks are linked as they are posted. Everything is due at **11:59 PM** on the da
 | 13 | Tue 11/17 · Fri 11/20 | Cloud deployment | In-class — Tue 11/17<br>HW 9 — Fri 11/20 |
 | — | *11/23–27* | *Thanksgiving Break* | — |
 | 14 | Tue 12/1 · Fri 12/4 | Performance; **Quiz 2** | In-class — Tue 12/1<br>Quiz 2 — Fri 12/4 |
-| 15 | Tue 12/8 · Fri 12/11 | Final presentations | HW 10 — Tue 12/8<br>**Project presentation — Fri 12/11** |
+| 15 | Tue 12/8 · Fri 12/11 | Final presentations | HW 10 (optional) — Tue 12/8<br>**Project presentation — Fri 12/11** |
 | — | *12/16–22* | *Exam period* | **Project report — Wed 12/16** |
 
 **HW 6 and HW 10 get longer windows** because the calendar removes a Friday — 10/16 follows a Monday schedule, and Thanksgiving falls between 11/20 and 12/4.

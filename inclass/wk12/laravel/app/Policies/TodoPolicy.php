@@ -10,8 +10,9 @@ use Illuminate\Auth\Access\Response;
 //
 // Laravel finds this class by its name: the model is Todo, so the policy is TodoPolicy, in
 // app/Policies. Nothing calls it yet. Drill 8 has two halves:
-//   1. fill in the three methods below from the table, and
-//   2. make TodoController::findTodo() ask this policy (Gate::authorize).
+//   1. make TodoController::findTodo() ask this policy (Gate::authorize), and
+//   2. fill in the three methods below from the table. They are not three copies of one
+//      method: update() gives the admin a different answer from view() and delete().
 //
 // The rule, as a table. Read across a row: one action, three kinds of user.
 //
