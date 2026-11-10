@@ -20,4 +20,4 @@ PDF exports of the lecture decks, posted after each session.
 | 16 | Fri 10/23 | ORM II: relationships, eager loading, the N+1 problem | [PDF](16_eloquent_relationships_final.pdf) |
 | 18 | Fri 10/30 | React + Laravel, part 1: the finished product, the contract, and Homework 7 | [PDF](18_react_laravel_integration.pdf) |
 | 19 | Tue 11/3 | Security: the OWASP Top 10:2025 one entry at a time, the six holes (Friday's lab and Homework 8), and the middleware you already run | [PDF](19_security_v2.pdf) |
-| 21 | Tue 11/10 | Authentication: logging in and who may do what (Homework 9); sessions vs. tokens, OAuth 2.0 and single sign-on | [PDF](21_authentication.pdf) |
+| 21 | Tue 11/10 | Authentication and authorization: session cookies, OAuth 2.0 and JWT; guards and policies in Laravel (Homework 9); the login drills, step by step | [PDF](21_authentication_v3.pdf) |

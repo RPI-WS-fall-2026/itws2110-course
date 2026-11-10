@@ -4,8 +4,8 @@
 
 | | |
 |---|---|
-| **Tue 11/10** | **Authentication.** Part 1: logging in, from the pantry example — register, log in, the session cookie, log out, then who may do what (auth middleware, policies, mass assignment). Part 2: session cookies vs. tokens, "Log in with Google" (OAuth 2.0 and OpenID Connect), and single sign-on. [Slides](../slides/21_authentication.pdf) |
-| **Fri 11/13** | **Login lab.** Team work session: add the login to your team's `api/`, with a check script that reports PASS or FAIL for each request ([`inclass/wk12/`](../inclass/wk12/README.md)). Optional: [the login drills](../inclass/wk12/laravel/README.md), seven holes in the to-do app to break and fix, each with a Check result button. **Homework 8 due.** [Homework 9](../homework/hw9/README.md) assigned: the login and the write endpoints on your `api/`; due Fri 11/20. [Homework 10](../homework/hw10_optional_individual/README.md) (optional, individual) assigned: the to-do app with a login and a list of your own; due Tue 12/8. |
+| **Tue 11/10** | **Authentication and authorization.** Part 1: the two questions — who are you, and what may you do? Part 2: authentication — a password and a session cookie, then OAuth 2.0 in place of the password form and a JWT in place of the session ID. Part 3: authorization in Laravel — guards (401) and policies (403), from the pantry example. Then a step-through of the login drills. [Slides](../slides/21_authentication_v3.pdf) |
+| **Fri 11/13** | **Login lab.** Team work session: add the login to your team's `api/`, with a check script that reports PASS or FAIL for each request ([`inclass/wk12/`](../inclass/wk12/README.md)). Then [the login drills](../inclass/wk12/laravel/README.md): seven holes in the to-do app to break and fix, and an eighth that writes the access rule as a policy, each with a Check result button. **Homework 8 due.** [Homework 9](../homework/hw9/README.md) assigned: the login and the write endpoints on your `api/`; due Fri 11/20. [Homework 10](../homework/hw10_optional_individual/README.md) (optional, individual) assigned: the to-do app with a login and a list of your own; due Tue 12/8. |
 
 ---
 
