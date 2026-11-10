@@ -23,7 +23,13 @@ pass=0; fail=0
 
 ok()   { printf 'PASS  %s\n' "$1"; pass=$((pass + 1)); }
 no()   { printf 'FAIL  %s\n      got %s\n' "$1" "$2"; fail=$((fail + 1)); }
-first_line() { tr -d '\r' < "$BODY" | head -c 160; echo; }
+# The start of the reply, on one line. Laravel's JSON errors are spread over many lines, and
+# their "message" is the useful part, so print that when there is one.
+first_line() {
+  msg=$(tr -d '\r' < "$BODY" | tr '\n' ' ' | sed -n 's/.*"message" *: *"\([^"]*\)".*/\1/p')
+  if [ -n "$msg" ]; then printf '"%s"' "$msg" | head -c 160; echo
+  else tr -d '\r' < "$BODY" | tr '\n' ' ' | tr -s ' ' | head -c 160; echo; fi
+}
 
 # Fetch the CSRF cookie into the given jar and print the token, URL-decoded.
 csrf() {

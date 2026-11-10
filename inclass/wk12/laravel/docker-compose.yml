@@ -1,0 +1,96 @@
+# The week 12 login lab (optional). One image (see Dockerfile), a MySQL database, three ways to run it.
+#
+#   docker compose watch                 the app, at http://localhost:8020 -- edits sync in
+#   docker compose run --rm test         every drill check, in the terminal
+#   docker compose down                  stop          (add -v to throw the database away)
+#
+# After drill 1, or to undo an attack, rebuild the tables and seed again:
+#
+#   docker compose exec app php artisan migrate:fresh --seed
+#
+# The attacks for drills 3, 4 and 5 run inside the app container:
+#
+#   docker compose exec app php artisan attack guess
+
+name: itws2110-wk12
+
+x-source: &source
+  - ./app:/app/app
+  - ./routes:/app/routes
+  - ./resources:/app/resources
+  - ./database:/app/database
+  - ./config:/app/config
+  - ./bootstrap:/app/bootstrap
+  - ./public:/app/public
+  - ./tests:/app/tests
+
+services:
+  # The app. It waits for MySQL, builds and seeds the tables, and serves. Save a file and
+  # Compose copies it in ("Syncing"). Changing composer.* or .env.example rebuilds the image.
+  app:
+    build: .
+    image: itws2110-wk12-laravel
+    ports:
+      - "${APP_PORT:-8020}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    develop:
+      watch:
+        - { action: sync, path: ./app, target: /app/app }
+        - { action: sync, path: ./routes, target: /app/routes }
+        - { action: sync, path: ./resources, target: /app/resources }
+        - { action: sync, path: ./database, target: /app/database }
+        - { action: sync, path: ./config, target: /app/config }
+        - { action: sync, path: ./bootstrap, target: /app/bootstrap }
+        - { action: sync, path: ./public, target: /app/public }
+        - { action: sync, path: ./tests, target: /app/tests }
+        - { action: rebuild, path: ./composer.json }
+        - { action: rebuild, path: ./composer.lock }
+        - { action: rebuild, path: ./.env.example }
+        - { action: rebuild, path: ./Dockerfile }
+
+  # MySQL. The app reaches it by its service name: DB_HOST=db in .env.example.
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: todos
+      MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-psecret"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+
+  # Every drill check at once, in the terminal. One-shot. The checks use an in-memory SQLite
+  # database (phpunit.xml) and read a few files, so this does not need MySQL running.
+  test:
+    image: itws2110-wk12-laravel
+    build: .
+    profiles: [test]
+    volumes: *source
+    command: php artisan test
+
+  # For instructors: the same checks against the worked answers in answers/, on a throwaway
+  # copy. All seven should pass. `docker compose run --rm answers`
+  answers:
+    image: itws2110-wk12-laravel
+    build: .
+    profiles: [instructor]
+    volumes:
+      - ./app:/src/app:ro
+      - ./routes:/src/routes:ro
+      - ./resources:/src/resources:ro
+      - ./database:/src/database:ro
+      - ./config:/src/config:ro
+      - ./bootstrap:/src/bootstrap:ro
+      - ./tests:/src/tests:ro
+      - ./answers:/src/answers:ro
+    command: >
+      sh -c "cp -R /src/app /src/routes /src/resources /src/database /src/config /src/bootstrap /src/tests /app/ &&
+             cp -R /src/answers/. /app/ && php artisan test"
+
+volumes:
+  dbdata:
