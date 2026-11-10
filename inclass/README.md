@@ -14,3 +14,6 @@ Tuesday in-class exercises are released here, one directory per session.
   committed secret, a vulnerable dependency, and security headers, in a Laravel app with MySQL.
 - [Week 12 — the login lab](wk12/README.md): add register, log in, log out and `GET /user` to
   your team's `api/`, with a curl check script. Friday 11/13; the start of Homework 9.
+  Then [the login drills](wk12/laravel/README.md): seven holes in the to-do app's login to
+  break and fix, and an eighth drill that writes the access rule once, as a policy, each with
+  a Check result button.

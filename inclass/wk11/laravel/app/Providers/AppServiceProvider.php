@@ -30,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
         // DRILL 7: name a rate limit here, then put throttle:search on the todos.index route
         // in routes/web.php. See the drills page.
         // RateLimiter::for('search', fn (Request $request) => Limit::perMinute(20)->by($request->ip()));
+        RateLimiter::for('search', fn (Request $request) => Limit::perMinute(20)->by($request->ip()));
     }
 }

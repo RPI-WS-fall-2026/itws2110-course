@@ -18,7 +18,7 @@ Route::get('/drills/{number}/check', [WorkshopController::class, 'check'])->wher
 // the headers, then take it off again in step 4 and register it for every route instead.
 // DRILL 7: ->middleware('throttle:search') on this route, with the 'search' limit named in
 // app/Providers/AppServiceProvider.php.
-Route::get('/todos', [TodoController::class, 'index'])->name('todos.index');
+Route::get('/todos', [TodoController::class, 'index'])->name('todos.index')->middleware('throttle:search');
 Route::get('/todos/{todo}', [TodoController::class, 'show'])->whereNumber('todo')->name('todos.show');
 Route::post('/todos', [TodoController::class, 'store'])->name('todos.store');
 

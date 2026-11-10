@@ -1,4 +1,4 @@
-# The week 12 login lab (optional). One image (see Dockerfile), a MySQL database, three ways to run it.
+# The week 12 login lab. One image (see Dockerfile), a MySQL database, three ways to run it.
 #
 #   docker compose watch                 the app, at http://localhost:8020 -- edits sync in
 #   docker compose run --rm test         every drill check, in the terminal
@@ -74,7 +74,7 @@ services:
     command: php artisan test
 
   # For instructors: the same checks against the worked answers in answers/, on a throwaway
-  # copy. All seven should pass. `docker compose run --rm answers`
+  # copy. All eight should pass. `docker compose run --rm answers`
   answers:
     image: itws2110-wk12-laravel
     build: .

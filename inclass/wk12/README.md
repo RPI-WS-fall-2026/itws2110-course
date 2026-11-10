@@ -15,9 +15,11 @@ it is not 8010), and this showing your five routes:
 docker compose exec app php artisan route:list --path=api
 ```
 
-**Finished, or waiting on a teammate?** The [optional login drills](laravel/README.md) break
-and fix each idea from Tuesday on the week 11 to-do app, with a Check result button for each,
-and they are the warm-up for the optional [Homework 10](../../homework/hw10_optional_individual/README.md).
+**Then, the login drills.** When your team's check passes (or while you wait on a teammate),
+work through [the login drills](laravel/README.md): they break and fix each idea from Tuesday on
+the week 11 to-do app, with a Check result button for each, and drill 8 writes a **policy**,
+the same kind of class Homework 9 asks for. They are also the warm-up for the optional
+[Homework 10](../../homework/hw10_optional_individual/README.md).
 
 ## What to do
 

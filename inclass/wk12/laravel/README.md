@@ -1,23 +1,26 @@
-# Login lab, week 12 (optional) — break it, then fix it
+# Login lab, week 12 — break it, then fix it
 
 [← Week 12 lab](../README.md) · [Teaching guide](TEACHING.md) · [Worked answers](answers/README.md)
 
-**Optional, not graded.** This is for anyone who wants to see Tuesday's ideas work (and fail)
-before putting them into the team project, and for anyone who finishes the team lab early.
-It is also the best warm-up for [Homework 10](../../../homework/hw10_optional_individual/README.md),
+**Not graded: the Check result buttons are your feedback.** Do these after the
+[team lab](../README.md), or while you wait on a teammate. They show Tuesday's ideas work (and
+fail) on a small app before you put them in your team project, and drill 8 writes the same kind
+of policy class Homework 9 asks for. They are also the best warm-up for [Homework 10](../../../homework/hw10_optional_individual/README.md),
 which builds the same app's login yourself.
 
 It is the to-do app from week 11, with last week's six fixes already in, and a login added:
-register, log in, log out, a list of your own, and an admin page. The login has six holes,
+register, log in, log out, a list of your own, and an admin page. The login has seven holes,
 one for each idea on Tuesday's slides. For each one you **run the attack first**, watch it
-work, then make the one change that closes it, and press **Check result**.
+work, then make the one change that closes it, and press **Check result**. Drill 8 then changes
+the rules and moves them all into one class, a **policy**.
 
 | Drills | The question | You edit | Checked by |
 |---|---|---|---|
 | warm-up | What is a session cookie? | nothing: you look | — |
 | 1–3 | **Who are you?** Storing passwords, the error message, guessing | the User model, `AuthController`, a provider, a route | the **Check result** button |
 | 4–6 | **What may you do?** Logged out, the admin role, someone else's to-do | `routes/web.php`, `AuthController`, `TodoController` | the **Check result** button |
-| 7 | If you finish: the search | `TodoController` | the **Check result** button |
+| 7 | The search | `TodoController` | the **Check result** button |
+| 8 | **Write the rule once:** the admin may read any to-do, not change it | `app/Policies/TodoPolicy.php`, `TodoController` | the **Check result** button |
 
 ## Set up — once
 
@@ -189,7 +192,7 @@ different about your project's data?
 
 ---
 
-### 7. If you finish: the search box · 3 minutes
+### 7. The search box · 3 minutes
 
 As Priya, search for the letter `e`. Alex's to-dos are in the results. In
 `TodoController::index()`, start the search from `$request->user()->todos()`, like the list.
@@ -197,6 +200,85 @@ As Priya, search for the letter `e`. Alex's to-dos are in the results. In
 **Done when:** the check passes.
 **Explain:** drills 6 and 7 are the same mistake in two places. With fifty queries, how would
 you make sure none of them forgets? (Homework 10 asks the same question.)
+
+---
+
+## Write the rule once — drill 8
+
+### 8. The admin may read any to-do, but not change it · 15 minutes
+
+Do drill 6 first. Then a new rule arrives: the admin answers support requests ("I can't find my
+to-do"), so the admin must be able to **read** any to-do, and **delete** one that breaks the
+rules. But it is not the admin's list, so the admin may **not** mark it done.
+
+**Try it.** Log in as `admin@example.edu` / `admin-pass`, open **/admin**, and click Alex's
+*Email the TA*: **404**. Drill 6's fix says "only your own rows", and the admin owns none.
+
+**Predict before you read on:** can you write this rule by changing the query in `findTodo()`?
+(Try: what query lets the admin *read* to-do 2 but not *toggle* it, when both go through the
+same `findTodo()`?)
+
+You can't, because the answer depends on the *action*, not only on the row. Here is the whole
+rule as a table, the same shape as Part 1 of `PROJECT_v3.pdf`:
+
+| Action | Route | The owner | The admin | Anyone else |
+|---|---|---|---|---|
+| `view` | `GET /todos/{id}` | yes | yes | 404 |
+| `update` | `PATCH /todos/{id}/toggle` | yes | **403** | 404 |
+| `delete` | `DELETE /todos/{id}` | yes | yes | 404 |
+
+A **policy** is a class that holds that table for one model. Laravel finds it by name
+(`Todo` → `App\Policies\TodoPolicy`). One method per row; each gets the logged-in user and the
+to-do, and returns one of three answers:
+
+| The method returns | The browser gets | Use it when |
+|---|---|---|
+| `Response::allow()` | the page, as normal | the table says yes |
+| `Response::deny('Why not.')` | **403** Forbidden | they may know it exists, but may not do this |
+| `Response::denyAsNotFound()` | **404** Not Found | they should not learn that it exists |
+
+**A worked row.** This is `view()`, the first row of the table, finished:
+
+```php
+public function view(User $user, Todo $todo): Response
+{
+    if ($todo->user_id === $user->id || $user->isAdmin()) {   // the owner, or the admin
+        return Response::allow();
+    }
+
+    return Response::denyAsNotFound();   // anyone else: 404, like drill 6
+}
+```
+
+`$user` comes from the session and `$todo->user_id` from the database. Nothing in it came from
+the request, so nothing in it can be forged.
+
+**Your turn, two files:**
+
+1. In `app/Policies/TodoPolicy.php` (it is there, with every method saying `allow()`), write
+   `view()` as above, then `update()` and `delete()` from their rows of the table.
+2. In `TodoController::findTodo()`, look the to-do up in the **whole** table again, then ask
+   the policy. `$ability` is already passed in: `'view'` from `show()`, `'update'` from
+   `toggle()`, `'delete'` from `destroy()`.
+
+   ```php
+   $todo = Todo::findOrFail($id);      // 404 if no such to-do at all
+   Gate::authorize($ability, $todo);   // asks TodoPolicy; throws the 403 or 404 for you
+   return $todo;
+   ```
+
+**Done when:** the drill 8 check passes, **and drill 6's still does**: Priya still gets 404 for
+Alex's to-do, now from the policy. As the admin, `/todos/2` opens, and **Mark done** answers 403.
+
+**Explain:**
+- The pantry's `ItemPolicy` has a `before()` method that lets the admin do anything. Why would
+  `before()` be wrong in this policy?
+- Drill 7's search still starts from `$request->user()->todos()`. Why can't the policy fix the
+  search? (Hint: a policy is asked about one to-do you already have. What does a search have
+  before it runs?)
+- The **Mark done** button still shows for the admin, who then gets a 403. In `todos/show.blade.php`,
+  `@can('update', $todo) … @endcan` would hide it, using the same policy. Why is hiding the
+  button not enough on its own? (Drill 4.)
 
 ---
 
@@ -216,3 +298,6 @@ docker compose run --rm test
 | `attack delete` says *There is no to-do 2* | An earlier attack deleted it. `php artisan migrate:fresh --seed`. |
 | Logged in, but `/todos/5` is a 404 as Alex | Correct after drill 6: 5 is Priya's. |
 | The Check button says the check failed to run | Is the watch terminal still running? Reload the page. |
+| Drill 8: the admin still gets 404 on `/todos/2` | `findTodo()` still starts from `$request->user()->todos()`. Drill 8 replaces drill 6's line with `Todo::findOrFail($id)` plus `Gate::authorize(...)`. |
+| Drill 8: Priya now gets 403, not 404, and drill 6 fails | The policy returned `Response::deny()` for her. Anyone who is neither the owner nor the admin gets `Response::denyAsNotFound()`. |
+| Drill 8: everyone may do everything | `Gate::authorize($ability, $todo)` is missing from `findTodo()`, so the policy is never asked. |

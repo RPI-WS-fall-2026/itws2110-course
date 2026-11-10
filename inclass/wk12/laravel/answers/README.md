@@ -11,7 +11,8 @@ you look.
 | `app/Http/Controllers/AuthController.php` | 1 (`Hash::check`), 2 (one message), 5 (create from `validate()`) |
 | `app/Providers/AppServiceProvider.php` | 3 (the `login` limit) |
 | `routes/web.php` | 3 (`throttle:login`), 4 (the delete route inside `auth`) |
-| `app/Http/Controllers/TodoController.php` | 6 (`findTodo` through the user), 7 (the search through the user) |
+| `app/Http/Controllers/TodoController.php` | 6 (`findTodo` through the user, then replaced by 8), 7 (the search through the user), 8 (`Gate::authorize` in `findTodo`) |
+| `app/Policies/TodoPolicy.php` | 8 (the rule table: `view`, `update`, `delete`) |
 
 | # | The fix in one line |
 |---|---|
@@ -22,5 +23,6 @@ you look.
 | 5 | `$fields = $request->validate([...]); User::create($fields);` and `#[Fillable(['name', 'email', 'password'])]` |
 | 6 | `return $request->user()->todos()->findOrFail($id);` |
 | 7 | `$request->user()->todos()->where('title', 'like', "%$q%")` |
+| 8 | `TodoPolicy`: view and delete allow the owner or the admin, else `denyAsNotFound()`; update allows the owner, `deny()` (403) for the admin, else `denyAsNotFound()`. `findTodo()`: `$todo = Todo::findOrFail($id); Gate::authorize($ability, $todo); return $todo;` |
 
 To check them all without touching your own files: `docker compose --profile instructor run --rm answers`.

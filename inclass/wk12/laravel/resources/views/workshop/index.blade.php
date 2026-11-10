@@ -9,10 +9,11 @@
 </head>
 <body>
 <main class="page workshop">
-    <p class="kicker">ITWS 2110 · Laravel lab · week 12 · optional</p>
+    <p class="kicker">ITWS 2110 · Laravel lab · week 12</p>
     <h1>Logging in: break it, then fix it</h1>
     <p>The to-do app from week 11, with last week's six fixes in and a login added. The login
-        has six holes, and a seventh for when you finish. Each drill names the file to edit.
+        has seven holes. Drill 8 then changes the rules (the admin may read any to-do) and moves
+        them into one place, a policy. Each drill names the file to edit.
         <strong>Run the attack first</strong> (the Attack panel says how), then make the fix, save,
         and press <strong>Check result</strong>: it runs that drill's test against your files right now.</p>
 

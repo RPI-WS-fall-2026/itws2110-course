@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Process;
 // Each drill's Check result button runs that drill's test in tests/Feature/Drills/ --
 // the same file `docker compose run --rm test` runs. Every check builds its own in-memory
 // database from the migrations and sends requests to your code, the way an attacker would.
-// Drill 7 is optional, for pairs who finish.
 class WorkshopController extends Controller
 {
     public const DRILLS = [
@@ -70,13 +69,22 @@ class WorkshopController extends Controller
             'hint' => "In TodoController::findTodo():\n    return \$request->user()->todos()->findOrFail(\$id);\n\nOne line, and show(), toggle() and destroy() are all fixed, because all three look the to-do up here.",
         ],
         7 => [
-            'group' => 'If you finish', 'title' => 'The search box forgets whose list it is', 'open' => '/todos?q=e',
+            'group' => 'What may you do?', 'title' => 'The search box forgets whose list it is', 'open' => '/todos?q=e',
             'file' => 'app/Http/Controllers/TodoController.php · index()',
             'goal' => "A search finds only your own to-dos.",
             'owasp' => 'A01:2025 Broken Access Control',
             'attack' => "Logged in as Priya, search for the letter e. Her two to-dos are there -- and so are Alex's four. The list was scoped to the login; the search, added later, starts from Todo:: and searches everyone's.",
             'idea' => "Drill 6's idea in a second place. Every query that reads to-dos must start from the user, and it is easy to forget one. That is why apps with many users' data in one table (multi-tenant apps) often add the user_id condition to every query automatically -- a global scope. Homework 10 asks for exactly this list, built by you.",
             'hint' => "In index(), start the search from the user, like the list:\n    \$todos = \$request->user()->todos()->where('title', 'like', \"%\$q%\")->orderBy('title')->get();",
+        ],
+        8 => [
+            'group' => 'Write the rule once: a policy', 'title' => 'The admin may read any to-do, but not change it', 'open' => '/admin',
+            'file' => 'app/Policies/TodoPolicy.php and TodoController::findTodo()',
+            'goal' => "The owner may view, update and delete. The admin may view and delete any to-do, but gets 403 for update. Anyone else gets 404 for all three.",
+            'owasp' => 'A01:2025 Broken Access Control (deny by default, one place for the rule)',
+            'attack' => "Do drill 6 first. Then log in as admin@example.edu (password: admin-pass), open /admin and click Alex's \"Email the TA\": 404. Drill 6's scope says \"only your own rows\", and the admin's own rows are none. The support desk cannot read the to-do it was asked about.\n\nNow undo drill 6 in your head: with Todo::findOrFail(\$id) the admin could read it, but could also press Mark done on Alex's list, and so could Priya. A scope knows one rule, \"mine\". This app now has three kinds of user and three actions, and they get different answers.",
+            'idea' => "A policy is one class that holds the whole \"who may do what\" table for one model: a method per action (view, update, delete), each given the logged-in user and the record, each answering allow, deny (403) or denyAsNotFound (404). Gate::authorize(\$ability, \$todo) asks it and throws the 403 or 404 for you, before the controller touches the row. The rule now lives in one file, not in every query, so a new route only needs one line to get it right. Scopes still have a job: a policy judges one record you already found; a list or a search (drill 7) has to start from the user's rows. Your team project's Homework 9 policy is the same class, with 403 for the wrong user because its data is public.",
+            'hint' => "1. In app/Policies/TodoPolicy.php, write the three rows of the table:\n\n    public function view(User \$user, Todo \$todo): Response\n    {\n        if (\$todo->user_id === \$user->id || \$user->isAdmin()) {\n            return Response::allow();\n        }\n        return Response::denyAsNotFound();\n    }\n\n    update(): allow the owner; the admin gets Response::deny('Only the owner may change a to-do.');\n              everyone else gets Response::denyAsNotFound().\n    delete(): the same answer as view():  return \$this->view(\$user, \$todo);\n\n2. In TodoController::findTodo(), find the to-do anywhere, then ask the policy:\n\n    \$todo = Todo::findOrFail(\$id);\n    Gate::authorize(\$ability, \$todo);\n    return \$todo;\n\nThen press Check result for drill 6 too: Priya still gets 404.",
         ],
     ];
 
