@@ -2,11 +2,6 @@
 
 # Instructor-only notes live beside the material but never publish.
 INSTRUCTOR*.md
-.obsidian/core-plugins.json
-.obsidian/app.json
-.obsidian/appearance.json
-.obsidian/workspace.json
-weeks/.obsidian/workspace.json
-weeks/.obsidian/core-plugins.json
-weeks/.obsidian/app.json
-weeks/.obsidian/appearance.json
+
+# Obsidian settings, in any folder.
+.obsidian/

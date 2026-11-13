@@ -29,7 +29,8 @@ http://localhost:8040. Not graded.
 ## What to do
 
 Work through the nine files in this order. Every one of them exists in
-[`project/pantry-example-final`](../../project/pantry-example-final/) under the same path;
+[`project/pantry-example-final`](../../project/pantry-example-final/) under the same path
+(your resource's controller is the one exception: the example keeps its own in `Controllers/Api/`);
 read the example's version, then write yours. Split the work: one teammate on steps 1–5 (the
 API), one on steps 6–9 (the pages), and swap who types at each pause.
 
@@ -42,8 +43,8 @@ API), one on steps 6–9 (the pages), and swap who types at each pause.
 | 4 | `api/app/Providers/AppServiceProvider.php` | Add the two `RateLimiter::for()` calls (`login`, `register`) in `boot()`. | 5 |
 | 5 | `api/bootstrap/app.php` and `docker-compose.yml` | Add `$middleware->statefulApi();` to `withMiddleware`. In `docker-compose.yml`, the `app` service's `SANCTUM_STATEFUL_DOMAINS` must name **your** web port: `localhost:8010,web:5173`. The pantry's copy says `5181`. | 5 |
 | | **Pause 2** (about 45 minutes into class) | Everyone runs the check (below). 9 of 9 is the goal for the API. Stuck? Read the FAIL line, then the Troubleshooting table, then ask. A team at 9 helps the team next to it. | |
-| 6 | `web/src/api.js` | Add `currentUser`, `login`, `register`, `logout` from the example. The `request()` helper you already have does the CSRF dance. | 5 |
-| 7 | `web/src/session.jsx` | New file: copy the example's `SessionProvider` and `useSession()`. Wrap your app in `<SessionProvider>` in `main.jsx`. | 10 |
+| 6 | `web/src/api.js` | From the example's [`api.js`](../../project/pantry-example-final/web/src/api.js): `readCookie()`, `csrfToken()` and `request()` (yours answered from fake data at the midterm; this one calls `fetch` and sends the CSRF token), then `currentUser`, `login`, `register`, `logout`. | 5 |
+| 7 | `web/src/session.jsx` | New file: copy the example's [`session.jsx`](../../project/pantry-example-final/web/src/session.jsx). Wrap your routes in `<SessionProvider>` in `App.jsx`, as the example's [`App.jsx`](../../project/pantry-example-final/web/src/App.jsx) does. | 10 |
 | 8 | `web/src/pages/AuthPages.jsx` | New file: the Log in and Register forms, copied from the example; add the two routes in `App.jsx`. | 15 |
 | 9 | Your layout | Show the name from `useSession()` when someone is logged in, with a Log out button; a Log in link otherwise. Your midterm's `rules.js` stays — it only hides buttons now. | 10 |
 
@@ -103,4 +104,4 @@ today; it has to pass by Fri 11/20.
 | Check 3 fails | Your `login()` returns different messages for a wrong password and an unknown email. Use one message for both, so a stranger cannot learn which emails have accounts (Tuesday's login slide). |
 | Check 7 gets 501 | Your write routes are outside the `auth:sanctum` group. Move them inside; they may keep answering 501 for now. |
 | Check 9 gets 422 every time | The `throttle:login` middleware is not on the route, or `RateLimiter::for('login', …)` is not in `AppServiceProvider::boot()`. |
-| The pages: logging in works, then a refresh logs you out | `main.jsx` does not wrap the app in `<SessionProvider>`, or `currentUser()` is not called on load. |
+| The pages: logging in works, then a refresh logs you out | `App.jsx` does not wrap the routes in `<SessionProvider>`, or `currentUser()` is not called on load. |

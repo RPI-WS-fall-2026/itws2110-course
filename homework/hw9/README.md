@@ -10,12 +10,19 @@ someone else's, and the server, not the page, is what refuses.
 You do not invent this code. A login is the same in every Laravel app, so you read it in two
 finished apps and adapt it:
 
-- **The Laravel React starter kit**, [`laravel/react-starter-kit`](https://github.com/laravel/react-starter-kit).
-  This is what `laravel new` produces when you pick React: the login the Laravel team ships,
-  and what thousands of real apps start from. Read it on GitHub; you do not install it.
+- **The Laravel React starter kit**, in this repo at
+  [`inclass/wk12/react-starter`](../../inclass/wk12/react-starter/README.md). This is what `laravel new` produces when you
+  pick React ([`laravel/react-starter-kit`](https://github.com/laravel/react-starter-kit)):
+  the login the Laravel team ships, and what thousands of real apps start from. It is the
+  copy from Friday's class, so you can run it (`docker compose watch` in that folder, then
+  http://localhost:8040) and read the files beside it. Its paths start at the folder itself:
+  `app/`, `routes/`, `resources/js/`.
 - **The pantry example**, [`project/pantry-example-final`](../../project/pantry-example-final/).
-  The same ideas in the same shape as your project (an `api/` and a `web/`), with every file
-  under the same path as yours.
+  The same ideas in the same shape as your project: an `api/` and a `web/`. Its paths start
+  with `api/` or `web/`, as yours do.
+
+Every file named below is a link. Read the starter kit's version to see the rule, then the
+pantry's version to see it in your project's shape.
 
 The examples below use a resource called `Review` at `/api/reviews`. Use your own name.
 Want to see each idea fail before you build it? The optional
@@ -40,20 +47,26 @@ works through the list in [section 4](#4-what-your-app-should-do) by hand, then 
 
 ## Why the starter kit looks different: Inertia
 
-The starter kit has a React side: its pages are React components in `resources/js/pages/`.
-What it does not have is an API. A library called [Inertia](https://inertiajs.com) sits
+The starter kit has a React side: its pages are React components in
+[`resources/js/pages/`](../../inclass/wk12/react-starter/resources/js/pages/). What it does not have is an API. A library called [Inertia](https://inertiajs.com) sits
 between Laravel and React: a Laravel route answers with the *name of a page component and
-its props*, and Inertia renders that component in the browser. Your project does the same
-jobs with tools you already know.
+its props*, and Inertia renders that component in the browser. Friday's Students page is the
+small worked example: the route in [`routes/web.php`](../../inclass/wk12/react-starter/routes/web.php) calls
+[`StudentController.php`](../../inclass/wk12/react-starter/app/Http/Controllers/StudentController.php), which names the page
+[`students/index.tsx`](../../inclass/wk12/react-starter/resources/js/pages/students/index.tsx) and hands it `students` as a
+prop. Your project does the same jobs with tools you already know.
 
 | The job | Starter kit (one app, with Inertia) | Your project (an `api/` and a `web/`) |
 |---|---|---|
-| Which page is this address? | Laravel's `routes/web.php` | React Router, in `App.jsx` |
-| How does a page get its data? | Props, sent by the Laravel route | `fetch('/api/…')`, in `api.js` |
-| How does a form submit? | Inertia's `<Form>` posts to a Laravel route | `onSubmit` calls a function in `api.js` |
+| Which page is this address? | Laravel's [`routes/web.php`](../../inclass/wk12/react-starter/routes/web.php) | React Router, in [`App.jsx`](../../project/pantry-example-final/web/src/App.jsx) |
+| How does a page get its data? | Props, sent by the Laravel route | `fetch('/api/…')`, in [`api.js`](../../project/pantry-example-final/web/src/api.js) |
+| How does a form submit? | Inertia's `<Form>` posts to a Laravel route ([`login.tsx`](../../inclass/wk12/react-starter/resources/js/pages/auth/login.tsx)) | `onSubmit` calls a function in `api.js` ([`AuthPages.jsx`](../../project/pantry-example-final/web/src/pages/AuthPages.jsx)) |
 | Where do the 422 messages arrive? | An `errors` prop Inertia fills in | The object `api.js` throws; `err.errors` |
-| Who is logged in? | A prop shared with every page: `auth.user` | `GET /api/user`, kept by `session.jsx` |
-| Who checks the password? | A package, Fortify | Your `AuthController::login()` |
+| Who is logged in? | A prop shared with every page: `auth.user` ([`HandleInertiaRequests.php`](../../inclass/wk12/react-starter/app/Http/Middleware/HandleInertiaRequests.php)) | `GET /api/user`, kept by [`session.jsx`](../../project/pantry-example-final/web/src/session.jsx) |
+| Who checks the password? | A package, Fortify | Your [`AuthController::login()`](../../project/pantry-example-final/api/app/Http/Controllers/Api/AuthController.php) |
+
+The right-hand column links to the pantry example's copy of each file, which is the shape
+yours will have.
 
 That is why some files have no twin. The kit has no `routes/api.php`, no `api.js` and no
 `session.jsx`, because Inertia does those jobs; and it has no login controller of its own,
@@ -62,27 +75,30 @@ second client (a phone app, another team's site) will use the same data.
 
 ## Where each piece comes from
 
-The *rules* lift across unchanged, and the *plumbing* (how a page sends a form) comes from
-the pantry example. Starter-kit paths are links; pantry paths are the same as yours. The
-[login walkthrough slides](../../slides/22b_login_lab_walkthrough_v2.pdf) go through each file.
+The *rules* come from the starter kit, and the *plumbing* (how a page sends a form to an
+API) comes from the pantry example. Each row names the same idea in both.
+The [login walkthrough slides](../../slides/22b_login_lab_walkthrough_v2.pdf) go through each file.
 
-| What you need | Read it in the starter kit | What changes in yours |
-|---|---|---|
-| Passwords stored as hashes; `role` cannot be set by a request | [`app/Models/User.php`](https://github.com/laravel/react-starter-kit/blob/main/app/Models/User.php): `#[Fillable]` and the `hashed` cast | Nothing. Add your `isAdmin()` and your `hasMany`. |
-| What a new account must send | [`app/Actions/Fortify/CreateNewUser.php`](https://github.com/laravel/react-starter-kit/blob/main/app/Actions/Fortify/CreateNewUser.php), with the rules in [`app/Concerns/`](https://github.com/laravel/react-starter-kit/tree/main/app/Concerns) | The same rules, inside `register()` in your `AuthController`. |
-| The limit on login tries | [`app/Providers/FortifyServiceProvider.php`](https://github.com/laravel/react-starter-kit/blob/main/app/Providers/FortifyServiceProvider.php): `RateLimiter::for('login', …)` | Goes in your `AppServiceProvider::boot()`. Write `'email'` where it says `Fortify::username()`. |
-| Logging out properly | [`app/Http/Controllers/Settings/ProfileController.php`](https://github.com/laravel/react-starter-kit/blob/main/app/Http/Controllers/Settings/ProfileController.php): the three lines in `destroy()` that log out, `invalidate()` the session and `regenerateToken()` | The same three lines in `logout()`, answering 204 instead of redirecting. |
-| "Who is logged in?" for every page | [`app/Http/Middleware/HandleInertiaRequests.php`](https://github.com/laravel/react-starter-kit/blob/main/app/Http/Middleware/HandleInertiaRequests.php): `'auth' => ['user' => $request->user()]` | Yours is a route, `GET /api/user`, that returns the same thing; `session.jsx` asks it once. |
-| The two forms | [`resources/js/pages/auth/login.tsx`](https://github.com/laravel/react-starter-kit/blob/main/resources/js/pages/auth/login.tsx) and [`register.tsx`](https://github.com/laravel/react-starter-kit/blob/main/resources/js/pages/auth/register.tsx): the fields, their `autoComplete` values, an error under each field | The same fields. Yours submit with `fetch` (the pantry's `AuthPages.jsx`), not Inertia's `<Form>`. |
-| The header's name and Log out | [`resources/js/components/user-menu-content.tsx`](https://github.com/laravel/react-starter-kit/blob/main/resources/js/components/user-menu-content.tsx) | The pantry's `web/src/components/Layout.jsx` is the plain version. |
-| Rules written once, used by two requests | [`app/Concerns/ProfileValidationRules.php`](https://github.com/laravel/react-starter-kit/blob/main/app/Concerns/ProfileValidationRules.php), used by register and by profile update | Your resource's rules, once, used by `store()` and `update()`. |
+| What you need | In the starter kit | In the pantry example | What to do in yours |
+|---|---|---|---|
+| Passwords stored as hashes; `role` cannot be set by a request | [`app/Models/User.php`](../../inclass/wk12/react-starter/app/Models/User.php): `#[Fillable]` and the `hashed` cast | [`api/app/Models/User.php`](../../project/pantry-example-final/api/app/Models/User.php): the same two, plus `isAdmin()` and `items()` | The same two. Add your `isAdmin()` and your `hasMany`. |
+| What a new account must send | [`CreateNewUser.php`](../../inclass/wk12/react-starter/app/Actions/Fortify/CreateNewUser.php), with the rules in [`ProfileValidationRules.php`](../../inclass/wk12/react-starter/app/Concerns/ProfileValidationRules.php) and [`PasswordValidationRules.php`](../../inclass/wk12/react-starter/app/Concerns/PasswordValidationRules.php) | `register()` in [`AuthController.php`](../../project/pantry-example-final/api/app/Http/Controllers/Api/AuthController.php) | The same three fields (`name`, `email`, `password` with its confirmation), validated inside `register()`. |
+| The limit on login tries | [`FortifyServiceProvider.php`](../../inclass/wk12/react-starter/app/Providers/FortifyServiceProvider.php): `RateLimiter::for('login', …)` in `configureRateLimiting()` | `boot()` in [`AppServiceProvider.php`](../../project/pantry-example-final/api/app/Providers/AppServiceProvider.php) | Goes in your `AppServiceProvider::boot()`. Your project has no Fortify, so write `'email'` where the kit says `Fortify::username()`. |
+| Logging out properly | `destroy()` in [`ProfileController.php`](../../inclass/wk12/react-starter/app/Http/Controllers/Settings/ProfileController.php). That method deletes an account, and on the way it logs out, calls `invalidate()` on the session and `regenerateToken()` | `logout()` in [`AuthController.php`](../../project/pantry-example-final/api/app/Http/Controllers/Api/AuthController.php) | Those three steps and not `$user->delete()`. Write the first as `Auth::guard('web')->logout()`, as the pantry does, and answer 204. |
+| "Who is logged in?" for every page | [`HandleInertiaRequests.php`](../../inclass/wk12/react-starter/app/Http/Middleware/HandleInertiaRequests.php): `'auth' => ['user' => $request->user()]` | `user()` in [`AuthController.php`](../../project/pantry-example-final/api/app/Http/Controllers/Api/AuthController.php), asked once by [`session.jsx`](../../project/pantry-example-final/web/src/session.jsx) | A route, `GET /api/user`, that returns the same user as `{ "data": … }`. |
+| The two forms | [`login.tsx`](../../inclass/wk12/react-starter/resources/js/pages/auth/login.tsx) and [`register.tsx`](../../inclass/wk12/react-starter/resources/js/pages/auth/register.tsx): the fields, an `autoComplete` on each, an error under each | [`AuthPages.jsx`](../../project/pantry-example-final/web/src/pages/AuthPages.jsx): both forms in one file | The same fields. Yours submit with `fetch`, not Inertia's `<Form>`. |
+| The header's name and Log out | [`user-menu-content.tsx`](../../inclass/wk12/react-starter/resources/js/components/user-menu-content.tsx) | [`Layout.jsx`](../../project/pantry-example-final/web/src/components/Layout.jsx), the plain version | The name and a Log out button, or a Log in link. |
+| Rules written once, used by two requests | [`ProfileValidationRules.php`](../../inclass/wk12/react-starter/app/Concerns/ProfileValidationRules.php), used by `CreateNewUser.php` and by [`ProfileUpdateRequest.php`](../../inclass/wk12/react-starter/app/Http/Requests/Settings/ProfileUpdateRequest.php) | [`ItemRules.php`](../../project/pantry-example-final/api/app/Http/Requests/ItemRules.php), used by [`StoreItemRequest.php`](../../project/pantry-example-final/api/app/Http/Requests/StoreItemRequest.php) and [`UpdateItemRequest.php`](../../project/pantry-example-final/api/app/Http/Requests/UpdateItemRequest.php) | Your resource's rules, once, used by `store()` and `update()` (section 3). |
 
-Two things are **not** in the starter kit, so the pantry example is the only reference:
+Three things are **not** in the starter kit, so the pantry example is the only reference:
 
 - **`login()` itself.** The kit hands it to a package (Fortify), so there is no controller to
-  read. The pantry's `AuthController.php` writes the same steps out in fifteen lines.
-- **A policy.** The kit has no resource that belongs to one user. The pantry's
-  `ItemPolicy.php` is one.
+  read. The pantry's [`AuthController.php`](../../project/pantry-example-final/api/app/Http/Controllers/Api/AuthController.php)
+  writes the same steps out in sixteen lines.
+- **A policy.** The kit has no resource that belongs to one user (its students are a
+  hard-coded list). The pantry's [`ItemPolicy.php`](../../project/pantry-example-final/api/app/Policies/ItemPolicy.php) is one.
+- **Anything about an API.** `routes/api.php`, `statefulApi()`, `api.js` and `session.jsx`
+  exist only in the pantry, for the reason in the section above.
 
 ## Two kinds of commands
 
@@ -102,19 +118,25 @@ docker compose exec app php artisan route:list --path=api
 
 This is Friday's lab. Five files; the table above says where each one's contents come from.
 
-1. **`api/app/Models/User.php`.** Match the starter kit's: `password` cast to `hashed`, and
+1. **`api/app/Models/User.php`.** Match the starter kit's
+   [`User.php`](../../inclass/wk12/react-starter/app/Models/User.php): `password` cast to `hashed`, and
    `role` absent from `#[Fillable]`. Why: the cast means the column only ever holds a hash,
    and the allow-list means nobody registers as an admin by sending `"role": "admin"`.
 2. **`api/app/Http/Controllers/Api/AuthController.php`.** Copy the pantry example's
    [`AuthController.php`](../../project/pantry-example-final/api/app/Http/Controllers/Api/AuthController.php)
-   whole: `register()`, `login()`, `logout()`, `user()`. Read it beside the starter-kit files
-   in the table before you commit it; you should be able to say where each method's lines
-   come from.
-3. **`api/app/Providers/AppServiceProvider.php`.** The `login` limiter from the starter kit,
-   in `boot()`, and a `register` limiter keyed on `$request->ip()` alone. Why the email is in
+   whole: `register()`, `login()`, `logout()`, `user()`. The `Api/` folder is new in your
+   project; your resource's controller stays where Homework 7 put it. Read the file beside
+   the starter-kit files in the table before you commit it; you should be able to say where
+   each method's lines come from.
+3. **`api/app/Providers/AppServiceProvider.php`.** The `login` limiter from the starter kit's
+   [`FortifyServiceProvider.php`](../../inclass/wk12/react-starter/app/Providers/FortifyServiceProvider.php),
+   in `boot()`, and a `register` limiter keyed on `$request->ip()` alone. The pantry's
+   [`AppServiceProvider.php`](../../project/pantry-example-final/api/app/Providers/AppServiceProvider.php) has both. The kit
+   allows 5 tries a minute and the pantry 20; either is fine. Why the email is in
    the login key: one person's typos should not lock out everyone on the same network.
 4. **`api/routes/api.php`.** This one is yours, so here it is in full. The two reads stay
-   open; the two account routes name their limiters; everything else needs a login.
+   open; the two account routes name their limiters; everything else needs a login. The
+   pantry's [`routes/api.php`](../../project/pantry-example-final/api/routes/api.php) has the same three groups.
 
    ```php
    use App\Http\Controllers\Api\AuthController;
@@ -137,7 +159,9 @@ This is Friday's lab. Five files; the table above says where each one's contents
 
 5. **`api/bootstrap/app.php`** and **`docker-compose.yml`.** The starter kit needs neither,
    because its pages and its routes are one app. Yours are two, so one line turns the session
-   on for `/api`, and one environment variable says which addresses count as your pages:
+   on for `/api`, and one environment variable says which addresses count as your pages. Both
+   are in the pantry's [`bootstrap/app.php`](../../project/pantry-example-final/api/bootstrap/app.php) and
+   [`docker-compose.yml`](../../project/pantry-example-final/docker-compose.yml), where the port is `5181`; yours is `8010`:
 
    ```php
    $middleware->statefulApi();          // inside withMiddleware
@@ -156,22 +180,33 @@ bash ../itws2110-course/inclass/wk12/check-login.sh http://localhost:8010 review
 
 ## 2. The login, on the pages
 
-Open the starter kit's `login.tsx` and `register.tsx` first: that is the finished product.
-Then copy the pantry example's version of each file, which does the same with `fetch`.
+Open the starter kit's [`login.tsx`](../../inclass/wk12/react-starter/resources/js/pages/auth/login.tsx) and
+[`register.tsx`](../../inclass/wk12/react-starter/resources/js/pages/auth/register.tsx) first, or run the kit and look at
+http://localhost:8040/login: that is the finished product. Then copy the pantry example's
+version of each file, which does the same with `fetch`.
 
-1. **`web/src/api.js`.** Add `currentUser`, `login`, `register` and `logout` from the pantry's
-   `api.js`. The `request()` helper you already have fetches the CSRF cookie before a write.
-2. **`web/src/session.jsx`.** Copy it, and wrap your app in `<SessionProvider>` in `main.jsx`.
-   It asks `GET /api/user` once when the app loads and hands the answer to any component that
-   calls `useSession()`. This is your version of the starter kit's shared `auth.user`.
-3. **`web/src/pages/AuthPages.jsx`.** Copy it, and add `login` and `register` routes in
-   `App.jsx`. Check your forms against the starter kit's: the same fields, the same
-   `autoComplete` values, and the server's message under the field it belongs to.
+1. **`web/src/api.js`.** From the pantry's [`api.js`](../../project/pantry-example-final/web/src/api.js), take `readCookie()`,
+   `csrfToken()` and `request()` at the top, and `currentUser`, `login`, `register` and
+   `logout` at the bottom. Why `request()` too: at the midterm yours answered from fake data.
+   This one calls `fetch`, sends the session cookie, and fetches the CSRF cookie before a
+   write. Your own functions that call `request()` do not change.
+2. **`web/src/session.jsx`.** Copy the pantry's [`session.jsx`](../../project/pantry-example-final/web/src/session.jsx), and
+   wrap your routes in `<SessionProvider>` in `App.jsx`, as the pantry's
+   [`App.jsx`](../../project/pantry-example-final/web/src/App.jsx) does. It asks `GET /api/user` once when the app loads and
+   hands the answer to any component that calls `useSession()`. This is your version of the
+   starter kit's shared `auth.user`.
+3. **`web/src/pages/AuthPages.jsx`.** Copy the pantry's
+   [`AuthPages.jsx`](../../project/pantry-example-final/web/src/pages/AuthPages.jsx), and add `login` and `register` routes in
+   `App.jsx`. It imports the pantry's [`Field.jsx`](../../project/pantry-example-final/web/src/components/Field.jsx) and
+   shadcn `Button`; use your own field and button components if you have them. Check your
+   forms against the starter kit's: the same fields, an `autoComplete` on each, and the
+   server's message under the field it belongs to.
 4. **Your layout.** Show `user.name` and a Log out button when `useSession()` has a user, a
-   Log in link when it does not, as the pantry's `Layout.jsx` does.
+   Log in link when it does not, as the pantry's [`Layout.jsx`](../../project/pantry-example-final/web/src/components/Layout.jsx)
+   does.
 
-Your midterm's `rules.js` stays: it still decides which buttons to show. What changes in
-step 3 is that the server now decides whether the request behind the button is allowed.
+Your midterm's `rules.js` stays: it still decides which buttons to show (the pantry's
+[`rules.js`](../../project/pantry-example-final/web/src/rules.js) says so in its first comment). What changes in section 3 is that the server now decides whether the request behind the button is allowed.
 
 ## 3. The write endpoints, and who may do what
 
@@ -180,8 +215,9 @@ The three methods that answered 501. Each is short, because the work is elsewher
 Homework 7.
 
 **Validation.** The rules are your `API.md`'s field table as code. Write them once and use
-them twice, for the reason the starter kit keeps its profile rules in one trait: two copies
-drift apart.
+them twice, for the reason the starter kit keeps its profile rules in one trait
+([`ProfileValidationRules.php`](../../inclass/wk12/react-starter/app/Concerns/ProfileValidationRules.php)): two copies
+drift apart. Two constants in your controller are the smallest way to do that:
 
 ```php
 private const RULES = [
@@ -196,6 +232,12 @@ private const MESSAGES = [
 ];
 ```
 
+The pantry does the same job with more files: the rules in
+[`ItemRules.php`](../../project/pantry-example-final/api/app/Http/Requests/ItemRules.php), used by two Form Requests,
+[`StoreItemRequest.php`](../../project/pantry-example-final/api/app/Http/Requests/StoreItemRequest.php) and
+[`UpdateItemRequest.php`](../../project/pantry-example-final/api/app/Http/Requests/UpdateItemRequest.php). Either way is
+accepted. Do not look for `RULES` in the pantry's controller; it is not there.
+
 **The policy.** Generate it with the `make:policy` command above, then fill it in from the
 pantry's [`ItemPolicy.php`](../../project/pantry-example-final/api/app/Policies/ItemPolicy.php):
 `before()` lets the admin through everything, and `update()` and `delete()` each return one
@@ -204,7 +246,10 @@ the one from `PROJECT_v3.pdf` Part 1. The wrong user gets **403**, not 404, beca
 resource is public: anyone may read review 1, so there is nothing to hide about it existing.
 
 **The three methods.** The owner comes from the login, `$request->user()`, and never from
-the body. `Gate::authorize` asks the policy and throws the 403 for you.
+the body. `Gate::authorize` asks the policy and throws the 403 for you. The pantry's
+[`ItemController.php`](../../project/pantry-example-final/api/app/Http/Controllers/Api/ItemController.php) has the same three
+methods; its `update()` has no `Gate::authorize` line because `UpdateItemRequest` asks the
+policy first.
 
 ```php
 use Illuminate\Support\Facades\Gate;
@@ -236,13 +281,17 @@ public function destroy(Request $request, Review $review)
 
 **The 403 message.** `API.md` promised one. Laravel's default is `This action is
 unauthorized.`; to send yours, add a render rule in `bootstrap/app.php`'s `withExceptions`
-block, as the pantry example does for `AccessDeniedHttpException`.
+block, as the pantry's [`bootstrap/app.php`](../../project/pantry-example-final/api/bootstrap/app.php) does for
+`AccessDeniedHttpException`.
 
 ## 4. What your app should do
 
 There is no autograder for this homework. This list is what the grader does by hand, in this
-order, so do it yourselves first, on a fresh clone. The seeded account is `alex@example.edu`
-/ `password`.
+order, so do it yourselves first, on a fresh clone. The accounts are the three your
+Homework 7 seeder made: `alex@example.edu`, `priya@example.edu` and `admin@example.edu`, each
+with the password `password`. (The pantry's
+[`DatabaseSeeder.php`](../../project/pantry-example-final/api/database/seeders/DatabaseSeeder.php) calls its admin
+`ra@example.edu`; keep yours.)
 
 **On the pages, at http://localhost:8010**
 
@@ -307,11 +356,13 @@ say so in `PROCESS.md`.
 | Symptom | Cause and fix |
 |---|---|
 | `Class "Laravel\Fortify\Fortify" not found` | The limiter was copied from the starter kit unchanged. Replace `Fortify::username()` with `'email'`; your project does not have Fortify. |
+| `Method Illuminate\Auth\RequestGuard::logout does not exist` | `logout()` was copied from the starter kit as `Auth::logout()`. Inside `auth:sanctum` that asks the wrong guard. Write `Auth::guard('web')->logout()`, as the pantry does. |
 | `Class "App\Providers\Str" not found` | The starter kit's limiter uses `Str`. Add `use Illuminate\Support\Str;` at the top of `AppServiceProvider.php`. |
 | Homework 7 used `Route::apiResource` | Keep it for the two reads with `->only(['index', 'show'])`, and list the three writes inside the group as in step 1. |
 | `check-login.sh` checks 1 and 4 get 500 `"Session store not set on request."` | The address you passed the check is not in `SANCTUM_STATEFUL_DOMAINS` (use `localhost`, not `127.0.0.1`), or `statefulApi()` is missing from `bootstrap/app.php`. |
 | `port is already allocated` on 8010 | Another project, or Friday's lab copy, is still up. `docker compose down` in that folder. |
 | Every request after login gets 419 or 401 | Sanctum does not see the request as yours: `SANCTUM_STATEFUL_DOMAINS` must include `localhost:8010`, and `statefulApi()` must be in `bootstrap/app.php`. Restart `watch` after editing the compose file. The pantry's compose file says port `5181`; yours is `8010`. |
+| Logging in works, then a refresh logs you out | `App.jsx` does not wrap the routes in `<SessionProvider>`, or `request()` in `api.js` is still the midterm's fake one. |
 | The name in the header is wrong right after registering | `register()` returns the user before the database filled in `role`; the example's `->fresh()` is the fix. |
 | The policy never runs; everyone can delete | Laravel finds `ReviewPolicy` by name only if it is in `app/Policies/` and the model is `App\Models\Review`. Otherwise register it in `AppServiceProvider::boot()` with `Gate::policy(Review::class, ReviewPolicy::class)`. |
 | A `role` of `admin` arrives through `register` | `role` is in `#[Fillable]`. Remove it. |
