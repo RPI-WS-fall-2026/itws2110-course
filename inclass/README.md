@@ -17,3 +17,5 @@ Tuesday in-class exercises are released here, one directory per session.
   Then [the login drills](wk12/laravel/README.md): seven holes in the to-do app's login to
   break and fix, and an eighth drill that writes the access rule once, as a policy, each with
   a Check result button.
+  And [the React starter kit, running](wk12/react-starter/README.md): the one-app Inertia
+  shape from Friday's slides, with a Students page to follow from route to screen.

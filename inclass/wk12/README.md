@@ -21,6 +21,11 @@ the week 11 to-do app, with a Check result button for each, and drill 8 writes a
 the same kind of class Homework 9 asks for. They are also the warm-up for the optional
 [Homework 10](../../homework/hw10_optional_individual/README.md).
 
+**To read beside your project: the starter kit, running.** [`react-starter/`](react-starter/README.md)
+is the Laravel React starter kit from Friday's slides (one app, Inertia), with the Students
+page from the in-class demo added. `docker compose watch` in that folder, then
+http://localhost:8040. Not graded.
+
 ## What to do
 
 Work through the nine files in this order. Every one of them exists in

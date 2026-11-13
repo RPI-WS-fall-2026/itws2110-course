@@ -1,0 +1,43 @@
+# Week 12: the Laravel React starter kit (Inertia), with a Students page added. One container.
+#
+#   docker compose watch          the app at http://localhost:8040 -- edits sync in, React hot-reloads
+#   docker compose exec app php artisan migrate:fresh       start the database over
+#   docker compose exec app php artisan test                run the starter kit's tests
+#   docker compose down           stop (the SQLite database lives in the container: down -> fresh start)
+#
+# Each start runs the migrations and the seeder, so the two sample logins on the login page
+# always exist (database/seeders/DatabaseSeeder.php).
+#
+# Port 8040 is Laravel (open this one). Port 5174 is Vite: the browser fetches the React code
+# from it, so it has to be published too, but you never open it yourself.
+
+name: itws2110-wk12-react-starter
+
+services:
+  app:
+    build: .
+    image: itws2110-wk12-react-starter
+    ports:
+      - "${APP_PORT:-8040}:8000"
+      - "5174:5174"
+    environment:
+      APP_URL: http://localhost:${APP_PORT:-8040}
+      VITE_IN_DOCKER: "true"     # vite.config.ts: listen on 0.0.0.0, tell the browser localhost:5174
+      QUEUE_CONNECTION: sync     # no queue worker in this container: run jobs right away
+    develop:
+      watch:
+        - { action: sync, path: ./app, target: /app/app }
+        - { action: sync, path: ./routes, target: /app/routes }
+        - { action: sync, path: ./config, target: /app/config }
+        - { action: sync, path: ./database, target: /app/database, ignore: [database.sqlite] }
+        - { action: sync, path: ./resources, target: /app/resources, ignore: [js/actions/, js/routes/, js/wayfinder/] }
+        - { action: sync, path: ./public, target: /app/public, ignore: [hot, build/] }
+        - { action: sync, path: ./tests, target: /app/tests }
+        - { action: sync, path: ./vite.config.ts, target: /app/vite.config.ts }
+        - { action: sync, path: ./tsconfig.json, target: /app/tsconfig.json }
+        - { action: sync, path: ./components.json, target: /app/components.json }
+        - { action: rebuild, path: ./composer.lock }
+        - { action: rebuild, path: ./package-lock.json }
+        - { action: rebuild, path: ./.env.example }
+        - { action: rebuild, path: ./Dockerfile }
+        - { action: sync+restart, path: ./bootstrap/app.php, target: /app/bootstrap/app.php }

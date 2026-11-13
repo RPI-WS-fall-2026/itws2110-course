@@ -1,0 +1,16 @@
+vendor
+node_modules
+.env
+public/hot
+public/build
+bootstrap/cache/*.php
+storage/logs/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/framework/cache/data/*
+database/database.sqlite
+resources/js/actions
+resources/js/routes
+resources/js/wayfinder
+.git
+.DS_Store
