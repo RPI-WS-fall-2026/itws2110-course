@@ -64,7 +64,7 @@ second client (a phone app, another team's site) will use the same data.
 
 The *rules* lift across unchanged, and the *plumbing* (how a page sends a form) comes from
 the pantry example. Starter-kit paths are links; pantry paths are the same as yours. The
-[login walkthrough slides](../../slides/22b_login_lab_walkthrough.pdf) go through each file.
+[login walkthrough slides](../../slides/22b_login_lab_walkthrough_v2.pdf) go through each file.
 
 | What you need | Read it in the starter kit | What changes in yours |
 |---|---|---|
