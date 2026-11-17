@@ -12,3 +12,4 @@ Assignments are released here as the semester goes.
 - [Homework 8](hw8/README.md) — harden your api/: the six defenses from the security lab on your own project
 - [Homework 9](hw9/README.md) — log in, and the write endpoints: register, log in and log out on your `api/` and pages, then validation and a policy on your three write routes
 - [Homework 10](hw10_optional_individual/README.md) — *optional, individual*: the to-do app with a login and a list of your own; replaces your lowest homework score
+- [Homework 11](hw11/README.md) — *team*: your project live on Azure: a production image, a pipeline that deploys on every push to `main`, and a check script that says PASS or FAIL. Due Fri 12/4

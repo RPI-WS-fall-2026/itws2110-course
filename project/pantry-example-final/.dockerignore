@@ -1,0 +1,16 @@
+# What `docker build` must NOT send into the image. Goes at the root of your repository.
+# Without it, `COPY api .` would copy your laptop's api/.env (secrets) and api/vendor
+# (dev packages) over the clean install.
+.git
+.github
+**/.env
+**/node_modules
+**/vendor
+**/dist
+**/test-results
+**/playwright-report
+**/storage/logs/*
+**/storage/framework/cache/data/*
+**/storage/framework/sessions/*
+**/storage/framework/views/*
+**/bootstrap/cache/*.php

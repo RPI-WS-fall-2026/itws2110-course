@@ -63,9 +63,9 @@ Weeks are linked as they are posted. Everything is due at **11:59 PM** on the da
 | **[10](weeks/week-10.md)** | Tue 10/27 · Fri 10/30 | **Tue: project work day** · Fri: midterm presentations, then team time on HW 7 | **Project midterm update — Fri 10/30**<br>HW 7 assigned |
 | **[11](weeks/week-11.md)** | Tue 11/3 · Fri 11/6 | Security — OWASP Top 10, injection, XSS, CSRF, headers, supply chain; Fri: the security lab | In-class — Fri 11/6<br>HW 7 — Fri 11/6 |
 | **[12](weeks/week-12.md)** | Tue 11/10 · Fri 11/13 | Authentication — logging in, sessions vs. tokens, OAuth and single sign-on; Fri: the login lab | In-class — Fri 11/13<br>HW 8 — Fri 11/13 |
-| 13 | Tue 11/17 · Fri 11/20 | Cloud deployment | In-class — Tue 11/17<br>HW 9 — Fri 11/20 |
+| **[13](weeks/week-13.md)** | Tue 11/17 · Fri 11/20 | Cloud deployment — build, ship, run; settings, secrets and migrations in production; the pipeline; Fri: team time on HW 11 | In-class — Tue 11/17<br>HW 9 — Fri 11/20<br>HW 11 assigned |
 | — | *11/23–27* | *Thanksgiving Break* | — |
-| 14 | Tue 12/1 · Fri 12/4 | Performance; **Quiz 2** | In-class — Tue 12/1<br>Quiz 2 — Fri 12/4 |
+| 14 | Tue 12/1 · Fri 12/4 | Performance; **Quiz 2** | In-class — Tue 12/1<br>Quiz 2 — Fri 12/4<br>HW 11 (team) — Fri 12/4 |
 | 15 | Tue 12/8 · Fri 12/11 | Final presentations | HW 10 (optional) — Tue 12/8<br>**Project presentation — Fri 12/11** |
 | — | *12/16–22* | *Exam period* | **Project report — Wed 12/16** |
 

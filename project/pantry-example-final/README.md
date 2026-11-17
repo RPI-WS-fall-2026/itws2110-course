@@ -46,6 +46,30 @@ docker compose run --rm e2e
 
 The Laravel service is called `app`. The name `api` is used for the API tests, as in the PDF.
 
+## Run the production image
+
+`docker compose watch` is the development setup: two containers, Vite, MySQL, and a database
+that is refilled on every start. The copy that is deployed is built differently
+([week 13](../../weeks/week-13.md)): one container holds the React build and the API,
+the database is PostgreSQL, and a start keeps the data.
+
+```bash
+docker compose -f docker-compose.prod.yml up --build
+```
+
+Open **http://localhost:8090**. It starts empty: there is no seeder in production, so register
+an account and add the first item. Ctrl+C stops it; the next start still has your data.
+
+| File | What it is |
+|---|---|
+| [`Dockerfile`](Dockerfile) | The production image, in three stages: build the pages, install the API, what runs |
+| [`.dockerignore`](.dockerignore) | What must not be copied into the image (`.env`, `vendor/`, `node_modules/`) |
+| [`docker-compose.prod.yml`](docker-compose.prod.yml) | That image next to PostgreSQL, with its settings as environment variables |
+| [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) | The pipeline: tests, then build in Azure's registry, roll the app, check it |
+| [`api/routes/web.php`](api/routes/web.php) | The fallback route: any path that is not `/api/*` gets the React app |
+| [`api/bootstrap/app.php`](api/bootstrap/app.php) | `trustProxies`: the request arrives through Azure's edge, which holds the certificate |
+| [`api/app/Http/Middleware/SecurityHeaders.php`](api/app/Http/Middleware/SecurityHeaders.php) | Week 11's four headers on every response; HSTS tells browsers to use https here from now on |
+
 ## What changed since the midterm
 
 | Midterm | Final |
@@ -67,7 +91,7 @@ The Laravel service is called `app`. The name `api` is used for the API tests, a
 | A React front end, styled with Tailwind | `web/src/` |
 | Docker: one command | `docker-compose.yml` |
 | Tests at three levels | `api/tests/Unit/`, `web/tests/api/`, `web/tests/e2e/` |
-| Deployed at a public URL | Not in this example. We do this in the deployment lab (Fri 11/20) |
+| Deployed at a public URL | Not in this example. Homework 11 does this (started Fri 11/20) |
 
 ## Where each part comes from
 

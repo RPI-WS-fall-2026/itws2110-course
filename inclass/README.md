@@ -19,3 +19,11 @@ Tuesday in-class exercises are released here, one directory per session.
   a Check result button.
   And [the React starter kit, running](wk12/react-starter/README.md): the one-app Inertia
   shape from Friday's slides, with a Students page to follow from route to screen.
+- [Week 13 — a front end in a bucket](wk13/bucket/README.md): the midterm pantry prototype
+  built to plain files and served from cloud storage, with three predictions to check with
+  `curl`. Shown live, Tuesday 11/17.
+- [Week 13 — the deploy drills](wk13/laravel/README.md): four changes that get the to-do app
+  ready for strangers (debug off, a health route, a start that keeps the data, trusting the
+  proxy), then the app's production image (FrankenPHP,
+  PostgreSQL) on your laptop. Tuesday 11/17; the push is participation. Friday 11/20 is team
+  time on [Homework 11](../homework/hw11/README.md), which puts your project on Azure.
