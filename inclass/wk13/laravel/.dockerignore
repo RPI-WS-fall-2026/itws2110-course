@@ -1,0 +1,10 @@
+vendor
+.env
+.phpunit.cache
+.phpunit.result.cache
+storage/logs/*.log
+storage/framework/views/*.php
+storage/framework/sessions/*
+storage/framework/cache/data
+# Laravel writes these when it boots; one made on a laptop can name dev-only packages.
+bootstrap/cache/*.php

@@ -1,0 +1,64 @@
+# The week 13 deploy drills. One image (see Dockerfile) and a MySQL database.
+#
+#   docker compose watch                 the app, at http://localhost:8030 -- edits sync in
+#   docker compose down                  stop          (add -v to throw the database away)
+#
+# In a second terminal, while watch runs:
+#
+#   docker compose restart app           start the container again, as a deploy does (drill 3)
+#   docker compose logs app --since 2m   what the app wrote to its log (drill 5)
+#   docker compose exec app php artisan migrate --force      run new migrations (drill 5)
+
+name: itws2110-wk13
+
+services:
+  # The app. Save a file and Compose copies it in ("Syncing").
+  app:
+    build: .
+    image: itws2110-wk13-laravel
+    ports:
+      - "${APP_PORT:-8030}:8000"
+    # PRODUCTION'S SETTINGS. This block is the container's environment, and a real environment
+    # variable wins over the same line in .env. In Homework 11, Azure fills in this block for your
+    # team's app; nothing here is in the image, so one image runs anywhere.
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      LOG_CHANNEL: stderr       # write the log to the terminal, not to a file inside the container
+    depends_on:
+      db:
+        condition: service_healthy
+    develop:
+      watch:
+        - { action: sync, path: ./app, target: /app/app }
+        - { action: sync, path: ./routes, target: /app/routes }
+        - { action: sync, path: ./resources, target: /app/resources }
+        - { action: sync, path: ./database, target: /app/database }
+        - { action: sync, path: ./config, target: /app/config }
+        - { action: sync, path: ./bootstrap, target: /app/bootstrap }
+        - { action: sync, path: ./public, target: /app/public }
+        - { action: sync, path: ./pipeline, target: /app/pipeline }
+        # Saving start.sh copies it in AND starts the container again, so you see it run.
+        - { action: sync+restart, path: ./start.sh, target: /app/start.sh }
+        - { action: rebuild, path: ./composer.json }
+        - { action: rebuild, path: ./composer.lock }
+        - { action: rebuild, path: ./.env.example }
+        - { action: rebuild, path: ./Dockerfile }
+
+  # MySQL. The app reaches it by its service name: DB_HOST=db in .env.example. Its rows live
+  # in the dbdata volume, outside both containers, which is why they can outlive a restart.
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: todos
+      MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-psecret"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+
+volumes:
+  dbdata:

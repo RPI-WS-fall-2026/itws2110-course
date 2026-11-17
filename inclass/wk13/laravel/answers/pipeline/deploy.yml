@@ -1,0 +1,31 @@
+# The pipeline for this to-do app: what GitHub runs after every push to main.
+# It is kept in pipeline/ here so that it is only read, never run. In a real repository this
+# file lives at .github/workflows/deploy.yml -- Homework 11 copies one into your team's.
+#
+# DRILL 6 fixed: `needs` is the gate. deploy does not start until test has succeeded.
+name: deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  # The tests: `php artisan test`, on a clean machine.
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with: { php-version: "8.4", extensions: "pdo_sqlite" }
+      - run: composer install --no-interaction --prefer-dist
+      - run: cp -n .env.example .env && php artisan key:generate --force && php artisan test
+
+  # The deploy: build the image, start a new copy of the app from it, ask it /up.
+  deploy:
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "build the image in the registry"
+      - run: echo "roll the app to the new image"
+      - run: echo "ask the new copy for /up"

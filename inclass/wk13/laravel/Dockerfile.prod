@@ -1,0 +1,37 @@
+# The PRODUCTION image of the to-do app: what a server would run. Supplied; read it.
+#
+#   docker compose -f docker-compose.prod.yml up --build      builds it, runs it on :8035
+#
+# Compare it with Dockerfile (the one `docker compose watch` runs). Three differences:
+#   1. no dev packages: PHPUnit and Faker are tools for your laptop, not for a server
+#   2. a real web server, FrankenPHP, in place of `php artisan serve`
+#   3. no .env file: every setting arrives from the environment (docker-compose.prod.yml)
+# Homework 11's Dockerfile is this one plus a first stage that builds your React app.
+
+# ---- 1. INSTALL. Composer is needed to install the packages, not to run the app, so it
+# stays in this stage. Only the folder it produces is copied into stage 2.
+FROM composer:2 AS install
+WORKDIR /app
+# The lock file first: this slow layer is reused until composer.json or composer.lock change.
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-interaction --no-progress --no-scripts --no-autoloader --ignore-platform-reqs
+COPY . .
+RUN composer dump-autoload --optimize --classmap-authoritative --no-dev --no-scripts
+
+# ---- 2. WHAT RUNS. FrankenPHP: one program that is a web server (Caddy) with PHP inside.
+# `php artisan serve` handles one request at a time and is meant for a laptop.
+FROM dunglas/frankenphp:1-php8.4
+# pdo_pgsql: production uses PostgreSQL. opcache: PHP keeps compiled code in memory.
+RUN install-php-extensions pdo_pgsql pgsql opcache
+ENV SERVER_NAME=:8080 APP_ENV=production APP_DEBUG=false LOG_CHANNEL=stderr
+WORKDIR /app
+COPY --from=install /app /app
+RUN php artisan package:discover --ansi \
+ && mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
+ && chown -R www-data:www-data storage bootstrap/cache
+EXPOSE 8080
+# The platform asks /up whether the app started (drill 2). No /up, and this never says healthy.
+HEALTHCHECK --interval=15s --timeout=3s --retries=5 CMD curl -fsS http://localhost:8080/up || exit 1
+# Every start: the same first line as your fixed start.sh (drill 3), so the data is KEPT.
+# Then cache the settings and routes, and serve.
+CMD ["sh", "-c", "php artisan migrate --force --no-interaction && php artisan optimize --no-interaction && exec frankenphp php-server --root /app/public --listen :8080"]

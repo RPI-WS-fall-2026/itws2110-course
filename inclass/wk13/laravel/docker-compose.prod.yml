@@ -1,0 +1,47 @@
+# The to-do app's PRODUCTION image, run on your laptop. Supplied; read it.
+#
+#   docker compose -f docker-compose.prod.yml up --build     http://localhost:8035
+#   docker compose -f docker-compose.prod.yml down           stop; the data is KEPT
+#   docker compose -f docker-compose.prod.yml down -v        stop and throw the data away
+#
+# It runs beside `docker compose watch` (port 8030); the two never share a database.
+name: itws2110-wk13-prod
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports: ["${PROD_PORT:-8035}:8080"]
+    # Every setting, as environment variables: there is no .env file in the image. On a real
+    # platform these are set on the app, and APP_KEY and the password are secrets.
+    environment:
+      APP_KEY: base64:bGFwdG9wLW9ubHkta2V5LWxhcHRvcC1vbmx5LWtleSE=
+      APP_URL: http://localhost:8035
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: todos
+      DB_USERNAME: todos
+      DB_PASSWORD: laptop-only-password
+      SESSION_DRIVER: database     # logins live in the database, not inside the container
+      CACHE_STORE: file
+    depends_on:
+      db: { condition: service_healthy }
+
+  # PostgreSQL, as on the course's Azure platform. Its rows live in the proddata volume.
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: todos
+      POSTGRES_PASSWORD: laptop-only-password
+      POSTGRES_DB: todos
+    volumes:
+      - proddata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U todos -d todos"]
+      interval: 3s
+      retries: 40
+
+volumes:
+  proddata:
