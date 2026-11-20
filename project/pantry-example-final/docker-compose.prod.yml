@@ -43,7 +43,7 @@ services:
       SESSION_DRIVER: database
       CACHE_STORE: file
       SANCTUM_STATEFUL_DOMAINS: localhost:8090
-      # Off: this app's own login, as in Homework 9 and 11. To see the platform login,
+      # Off: this app's own login, as in Homeworks 9 and 10. To see the platform login,
       # start with PRD=true in front of the command (Log in then goes to the hub).
       PRD: ${PRD:-false}
       HUB_URL: https://ta.biggermatrix.com
