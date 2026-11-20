@@ -6,7 +6,7 @@
 set -e
 
 # Drop every table, build them again from the migrations, and put the seeder's rows in.
-php artisan migrate --force
+php artisan migrate:fresh --seed --force
 
 # Then serve. --host=0.0.0.0 so the server can be reached from outside the container.
 # --no-reload hands the container's environment (docker-compose.yml) on to the app; without
