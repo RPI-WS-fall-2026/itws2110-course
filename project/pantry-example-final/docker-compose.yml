@@ -32,9 +32,13 @@ services:
   # The Laravel API (api/). On start it rebuilds the tables and seeds them (see its
   # Dockerfile), so every `watch` begins from the same data.
   app:
-    build: ./api
+    # PLATFORM: built from the root, so the image can see packages/.
+    build: { context: ., dockerfile: api/Dockerfile }
     image: pantry-example-final-app
     environment:
+      # Development stays on MySQL; api/.env.example says pgsql, for production and the hub.
+      DB_CONNECTION: mysql
+      DB_PORT: 3306
       DB_HOST: db
       DB_DATABASE: ${DB_DATABASE:-pantry}
       DB_USERNAME: ${DB_USERNAME:-pantry}
@@ -61,9 +65,8 @@ services:
   # The React front end (web/). Vite serves it and forwards /api and /sanctum to `app`,
   # so the browser sees one address and the login cookie just works.
   web:
-    build:
-      context: ./web
-      dockerfile: Dockerfile.dev
+    # PLATFORM: built from the root, so the image can see packages/rpi-ui.
+    build: { context: ., dockerfile: web/Dockerfile.dev }
     image: pantry-example-final-web
     ports:
       - "${WEB_PORT:-5181}:5173"
@@ -78,9 +81,9 @@ services:
       retries: 20
     develop:
       watch:
-        - { action: sync, path: ./web/src, target: /app/src }
-        - { action: sync, path: ./web/index.html, target: /app/index.html }
-        - { action: sync+restart, path: ./web/vite.config.js, target: /app/vite.config.js }
+        - { action: sync, path: ./web/src, target: /app/web/src }
+        - { action: sync, path: ./web/index.html, target: /app/web/index.html }
+        - { action: sync+restart, path: ./web/vite.config.js, target: /app/web/vite.config.js }
         - { action: rebuild, path: ./web/package.json }
         - { action: rebuild, path: ./web/package-lock.json }
 
@@ -88,7 +91,7 @@ services:
 
   unit:
     image: pantry-example-final-app
-    build: ./api
+    build: { context: ., dockerfile: api/Dockerfile }
     profiles: [test]
     volumes:
       - ./api/app:/app/app

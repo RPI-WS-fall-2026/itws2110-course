@@ -2,7 +2,8 @@
 
 This is a sample final project. It is the [midterm example](../pantry-example-midterm/) with a
 real back end: a Laravel API, a MySQL database, real log in, and tests at three levels. It shows
-the minimum from the [project PDF](../PROJECT_v3.pdf), Part 1.
+the minimum from the [project PDF](../PROJECT_v3.pdf), Part 1. On the course platform it logs
+people in with their RPI account instead ([the `PRD` switch](#logging-in-on-the-course-platform-the-prd-switch)).
 
 **Floor Pantry** is a shared list of the food in a residence-hall kitchen. Students add what
 they put in the fridge. Everyone can see what goes off first. The RA (the admin) removes old food.
@@ -77,8 +78,9 @@ two changed lines**. Your project needs the same changes. [Homework 10](../../ho
 walks through them step by step and has the troubleshooting table; this section is the short
 version, with the reason for each change.
 
-**1. Add three files.** Copy them from this folder (or from `homework/hw10/starter/`), then read
-the comments in each one.
+**1. Add three files.** Copy them from `homework/hw10/starter/`, then read the comments in each
+one. (This folder's `Dockerfile` has two more `COPY` lines, for the platform packages; they come
+later, with [the `PRD` switch](#logging-in-on-the-course-platform-the-prd-switch).)
 
 | File | Goes in | Why |
 |---|---|---|
@@ -134,6 +136,51 @@ bash ../itws2110-course/homework/hw10/check-deploy.sh http://localhost:8090 revi
 You should see 8 passed, 0 failed, 3 skipped: the three skipped checks need https, so they
 run only on Azure. Then stop the image, start it again without `--build`, and run the check
 again. The account from the first run still logs in: a start kept the data.
+
+## Logging in on the course platform: the `PRD` switch
+
+The pantry logs people in **two ways**, and an environment variable, `PRD`, picks which:
+
+| `PRD` | Where | Log in |
+|---|---|---|
+| unset or `false` (the default) | your laptop, your lab address on Azure | the app's own `/api/login` and `/api/register`, as in Homework 9 |
+| `true` | the course platform, https://ta.biggermatrix.com, set by the instructor | the platform hub, with an RPI account (the `hub-auth` package) |
+
+With `PRD` off, everything above works as written: `check-login.sh`, Homework 10's
+`check-deploy.sh`, and the three test suites. With `PRD=true`, `/api/login` and
+`/api/register` are not registered at all, and **Log in** goes to the hub. Off is the default
+for the same reason `APP_DEBUG` is: a setting someone forgot falls back to the safe, tested
+behaviour.
+
+**You do not need this for Homework 10.** Your team adds it before your project goes on the
+showcase. These are the files that make up the switch, so the ones to copy or change in your
+project:
+
+| File | What it does |
+|---|---|
+| `packages/hub-auth-laravel/`, `packages/rpi-ui/` | The two shared packages, copied in (also in [`../platform-packages/`](../platform-packages/)) |
+| `api/composer.json` | Requires `rpi-platform/hub-auth` from `../packages/hub-auth-laravel` |
+| `api/database/migrations/2026_11_01_000000_add_hub_columns_to_users_table.php` | Published from the package: `hub_id`, `password` nullable |
+| `api/config/app.php` | `'prd' => (bool) env('PRD', false)` |
+| `api/routes/api.php` | `GET /api/platform`; login and register only when `PRD` is off |
+| `api/app/Http/Controllers/Api/AuthController.php` | `platform()`: tells the pages which login is on |
+| `api/.env.example` | `PRD=false`, the `HUB_*` settings, `DB_CONNECTION=pgsql` |
+| `web/src/api.js`, `session.jsx`, `App.jsx`, `components/Layout.jsx`, `components/PageState.jsx` | Ask `/api/platform`; with the hub, **Log in** is a link to `/auth/redirect`, and the platform bar shows |
+| `web/vite.config.js`, `web/src/index.css`, `web/package.json` | Forward `/auth`; the `@rpi-platform/ui` package |
+| `Dockerfile` | Homework 10's, plus one `COPY` of each package |
+| `docker-compose.yml`, `api/Dockerfile`, `web/Dockerfile.dev`, `web/Dockerfile.test` | Built from the repository root, so the builds can see `packages/`; development stays on MySQL |
+| `docker-compose.prod.yml` | `PRD: ${PRD:-false}` |
+
+The step-by-step guide is *Preparing your app* in the platform repository
+(`docs/PREPARING_YOUR_APP.md`). Try the platform mode locally:
+
+```bash
+PRD=true docker compose -f docker-compose.prod.yml up --build
+curl -sI 'http://localhost:8090/auth/redirect?return=/' | grep -i location   # -> https://ta.biggermatrix.com/oauth/authorize?...
+```
+
+The round trip itself needs a client the hub has issued for this address, so it first works
+on the platform deploy.
 
 ## What changed since the midterm
 

@@ -1,6 +1,9 @@
 # The Laravel API: PHP, Composer, and this app with its dependencies installed.
 # The same Dockerfile as HW7 and the week 9 workshop. `docker compose watch` runs it next
 # to MySQL; the unit suite runs inside it too.
+#
+# PLATFORM: built from the REPOSITORY ROOT (docker-compose.yml: context: .), because the
+# hub-auth package lives in packages/, outside api/. So every COPY names api/ or packages/.
 FROM php:8.4-cli
 
 # Composer needs unzip to unpack packages quickly. pdo_mysql is the PHP extension that
@@ -17,13 +20,15 @@ WORKDIR /app
 
 # Dependencies first, from the lockfile, so this slow layer is reused until
 # composer.json or composer.lock change. vendor/ lives only inside the image.
-COPY composer.json composer.lock ./
+# composer.json says "../packages/hub-auth-laravel"; from /app that is /packages.
+COPY packages/hub-auth-laravel /packages/hub-auth-laravel
+COPY api/composer.json api/composer.lock ./
 RUN composer install --no-interaction --no-progress --no-scripts --no-autoloader
 
 # Then the app itself. The autoloader is built now that the classes are here, and
 # .env is made from .env.example with a fresh APP_KEY -- the key that signs
 # sessions and cookies. .env is never committed.
-COPY . .
+COPY api .
 RUN composer dump-autoload --optimize \
  && cp -n .env.example .env \
  && php artisan key:generate --force --no-interaction \

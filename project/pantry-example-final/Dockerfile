@@ -4,13 +4,16 @@
 #   docker build -t my-project .        build it (from the repository root)
 #
 # Three stages. Only the last one ships; the first two exist to produce files for it.
-# It is the Dockerfile from the platform's "Preparing your app" guide, without the two shared
-# packages (hub login, platform bar) that you add when your project moves to the showcase.
+# It is Homework 10's Dockerfile plus the two shared packages in packages/ (hub login,
+# platform bar): two COPY lines, marked PLATFORM. With PRD unset the image behaves exactly
+# like Homework 10's; the platform deploy sets PRD=true (api/config/app.php).
 
 # ---- 1. BUILD THE PAGES.  web/ -> web/dist: plain HTML, CSS and JavaScript files.
 # Node is needed to build React. It is NOT needed to serve the result, so it stays here.
 FROM node:22-bookworm-slim AS web
 WORKDIR /src/web
+# PLATFORM: package.json says "file:../packages/rpi-ui", so it must be at /src/packages.
+COPY packages/rpi-ui /src/packages/rpi-ui
 # The two package files first: this slow layer is reused until one of them changes.
 COPY web/package.json web/package-lock.json ./
 RUN npm install --no-audit --no-fund
@@ -21,6 +24,8 @@ RUN npx vite build
 # --no-dev leaves out PHPUnit, Faker, Pail: tools for your laptop, not for the server.
 FROM composer:2 AS api
 WORKDIR /app
+# PLATFORM: composer.json says "../packages/hub-auth-laravel"; from /app that is /packages.
+COPY packages/hub-auth-laravel /packages/hub-auth-laravel
 COPY api/composer.json api/composer.lock ./
 RUN composer install --no-dev --no-interaction --no-progress --no-scripts --no-autoloader --ignore-platform-reqs
 COPY api .

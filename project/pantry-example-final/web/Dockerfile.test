@@ -1,7 +1,8 @@
 # One image for the api and e2e suites: Playwright and Chromium.
 # The tag must match "@playwright/test" in package.json.
+# The tests need only Playwright, not the app's packages: installing from package.json would
+# need packages/rpi-ui, which is outside this build's folder.
 FROM mcr.microsoft.com/playwright:v1.62.1-noble
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm init -y >/dev/null && npm install --no-audit --no-fund @playwright/test@1.62.1
 COPY playwright.config.js ./

@@ -12,7 +12,8 @@
         "php": "^8.3",
         "laravel/framework": "^13.17",
         "laravel/sanctum": "^4.3",
-        "laravel/tinker": "^3.0"
+        "laravel/tinker": "^3.0",
+        "rpi-platform/hub-auth": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -74,5 +75,13 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [{
+        "name": "hub-auth",
+        "type": "path",
+        "url": "../packages/hub-auth-laravel",
+        "options": {
+            "symlink": false
+        }
+    }]
 }

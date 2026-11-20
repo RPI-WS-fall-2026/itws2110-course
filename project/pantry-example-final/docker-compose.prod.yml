@@ -31,6 +31,7 @@ services:
     # The settings arrive as environment variables, exactly as they do on Azure.
     # These values are for a laptop. The deployed copy has its own, kept as secrets.
     environment:
+      APP_NAME: "Floor Pantry"        # the platform bar shows it
       APP_KEY: base64:bGFwdG9wLW9ubHkta2V5LWxhcHRvcC1vbmx5LWtleSE=
       APP_URL: http://localhost:8090
       DB_CONNECTION: pgsql
@@ -42,6 +43,10 @@ services:
       SESSION_DRIVER: database
       CACHE_STORE: file
       SANCTUM_STATEFUL_DOMAINS: localhost:8090
+      # Off: this app's own login, as in Homework 9 and 11. To see the platform login,
+      # start with PRD=true in front of the command (Log in then goes to the hub).
+      PRD: ${PRD:-false}
+      HUB_URL: https://ta.biggermatrix.com
     depends_on:
       db: { condition: service_healthy }
 

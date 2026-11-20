@@ -7,7 +7,8 @@ import { fileURLToPath, URL } from 'node:url';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
+  // dedupe: @rpi-platform/ui (packages/rpi-ui) has no React of its own; use this app's.
+  resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) }, dedupe: ['react', 'react-dom', 'react-router-dom'] },
   server: {
     // The test containers reach the dev server by its Compose name, "web".
     allowedHosts: ['web'],
@@ -18,6 +19,8 @@ export default defineConfig({
     proxy: {
       '/api': { target: process.env.API_URL ?? 'http://127.0.0.1:8000', changeOrigin: false },
       '/sanctum': { target: process.env.API_URL ?? 'http://127.0.0.1:8000', changeOrigin: false },
+      // The hub-auth routes (PRD=true): /auth/redirect, /auth/callback, /auth/logout.
+      '/auth': { target: process.env.API_URL ?? 'http://127.0.0.1:8000', changeOrigin: false },
     },
   },
 });

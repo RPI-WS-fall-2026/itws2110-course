@@ -2,6 +2,9 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+/* RPI tokens for the platform bar (packages/rpi-ui). This file's own :root below still wins. */
+@import "@rpi-platform/ui/theme.css";
+@source "../node_modules/@rpi-platform/ui/src";
 
 @custom-variant dark (&:is(.dark *));
 

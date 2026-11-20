@@ -1,6 +1,8 @@
 // The states every loading page shares (MIDTERM_APPENDIX.md section B). One component
 // each, so "loading" and "error" look and read the same on every page.
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { loginHref } from '@/api.js';
+import { useSession } from '@/session.jsx';
 import { Button } from '@/components/ui/button';
 
 export function Loading({ children = 'Loading…' }) {
@@ -19,11 +21,15 @@ export function LoadError({ children, onRetry }) {
 
 /** For a 401 or 403: say why, and offer the way forward. */
 export function Denied({ children, showLogin = false }) {
+  const { hub } = useSession();
+  const { pathname, search } = useLocation();
   return (
     <div className="rounded-xl border bg-muted/50 p-6">
       <p>{children}</p>
       <div className="mt-3 flex gap-3">
-        {showLogin && <Button asChild><Link to="/login">Log in</Link></Button>}
+        {showLogin && (hub
+          ? <Button asChild><a href={loginHref(pathname + search)}>Log in</a></Button>
+          : <Button asChild><Link to="/login">Log in</Link></Button>)}
         <Button asChild variant="outline"><Link to="/">Back to the shelf</Link></Button>
       </div>
     </div>

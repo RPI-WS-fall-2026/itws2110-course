@@ -43,6 +43,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | PRD: is this the copy on the course platform?
+    |--------------------------------------------------------------------------
+    |
+    | true:  people log in through the platform hub with their RPI account
+    |        (packages/hub-auth-laravel). /api/login and /api/register do not exist.
+    | false: the app's own login from Homework 9, so every earlier check
+    |        (check-login.sh, Homework 10's check-deploy.sh) keeps working.
+    |
+    | Off unless something turns it on. Only the platform deploy sets PRD=true.
+    |
+    */
+
+    'prd' => (bool) env('PRD', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application URL
     |--------------------------------------------------------------------------
     |

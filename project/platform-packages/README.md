@@ -16,7 +16,7 @@ cp -r ../itws2110-course/project/platform-packages/rpi-ui packages/
 | [`rpi-ui/`](rpi-ui/) | `@rpi-platform/ui`: RPI branding, the platform bar and footer |
 
 Use them behind the `PRD` switch, so your own login from Homework 9 keeps working everywhere
-except on the platform. The worked example is [`../pantry-example-platform/`](../pantry-example-platform/);
+except on the platform. The worked example is [`../pantry-example-final/`](../pantry-example-final/README.md#logging-in-on-the-course-platform-the-prd-switch);
 the step-by-step guide is *Preparing your app* (`docs/PREPARING_YOUR_APP.md`) in the platform
 repository.
 

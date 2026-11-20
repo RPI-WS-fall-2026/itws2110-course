@@ -172,7 +172,8 @@ eight, and which ones this homework grades:
 | 8 | `api/composer.lock` and `web/package-lock.json` are committed | yes |
 
 Hub checks 3 and 4 are for RPI login through the hub, which your team adds before the project
-goes on the showcase; [`pantry-example-platform`](../../project/pantry-example-platform/README.md)
+goes on the showcase; the pantry example's
+[`PRD` switch](../../project/pantry-example-final/README.md#logging-in-on-the-course-platform-the-prd-switch)
 shows that change. They are not part of this homework, so expect them to stay red.
 
 Red checks do not stop you submitting. Fix, push, and press **Check again**: the hub reads

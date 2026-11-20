@@ -15,9 +15,12 @@ export function SessionProvider({ children }) {
   // 'checking' until GET /api/user answers, so a page that needs a login does not flash
   // "please log in" at someone who is logged in.
   const [status, setStatus] = useState('checking');
+  // Which login this copy uses (api/config/app.php, PRD). 'password' until the API says.
+  const [platform, setPlatform] = useState({ login: 'password', hub_url: null });
 
   useEffect(() => {
     let ignore = false;
+    api.platform().then((p) => { if (!ignore) setPlatform(p); }).catch(() => {});
     api.currentUser()
       .then((u) => { if (!ignore) setUser(u); })
       .catch(() => { if (!ignore) setUser(null); })   // 401: nobody is logged in
@@ -30,7 +33,14 @@ export function SessionProvider({ children }) {
     status,
     async login(credentials) { const u = await api.login(credentials); setUser(u); return u; },
     async register(fields) { const u = await api.register(fields); setUser(u); return u; },
-    async logout() { await api.logout(); setUser(null); },
+    platform,
+    hub: platform.login === 'hub',
+    async logout() {
+      // On the platform, log out is a page trip: this app, then the hub, then back here.
+      if (platform.login === 'hub') { window.location.assign('/auth/logout'); return; }
+      await api.logout();
+      setUser(null);
+    },
   };
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }

@@ -91,5 +91,17 @@ export const register = (fields) =>
 
 export const logout = () => request('POST', '/api/logout').then(() => undefined);
 
+// ---------------------------------------------------------------- the platform (PRD)
+
+/** GET /api/platform -- { login: 'password' | 'hub', hub_url, app_name }. */
+export const platform = () => request('GET', '/api/platform').then((body) => body.data);
+
+/**
+ * With login 'hub': the address that sends someone to the hub (and RPI's login) and back
+ * to `returnTo`. It is a Laravel route from the hub-auth package, so pages use a plain
+ * <a href>, never a React Router <Link>.
+ */
+export const loginHref = (returnTo = '/') => `/auth/redirect?return=${encodeURIComponent(returnTo)}`;
+
 /** GET /api/users -- every account, for the admin page. The RA only. */
 export const listUsers = () => request('GET', '/api/users').then((body) => body.data);

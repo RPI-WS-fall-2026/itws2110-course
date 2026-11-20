@@ -17,6 +17,21 @@ use Illuminate\Validation\ValidationException;
  */
 class AuthController extends Controller
 {
+    /**
+     * GET /api/platform -- which login this copy uses, so the pages show the right button.
+     * "password": the forms below (PRD off). "hub": the platform hub, with an RPI account.
+     */
+    public function platform()
+    {
+        $prd = (bool) config('app.prd');
+
+        return ['data' => [
+            'login' => $prd ? 'hub' : 'password',
+            'hub_url' => $prd ? config('hub-auth.hub_url') : null,
+            'app_name' => config('app.name'),
+        ]];
+    }
+
     public function login(Request $request)
     {
         $credentials = $request->validate(
