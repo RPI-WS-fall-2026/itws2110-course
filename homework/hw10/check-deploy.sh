@@ -98,7 +98,9 @@ fi
 # 5. the API answers, from the database
 code=$(get "/api/$RESOURCE" application/json)
 case "$(ctype)" in
-  *json*) [ "$code" = "200" ] && ok "5. GET /api/$RESOURCE -> 200 JSON: Laravel reached its database" || no "5. GET /api/$RESOURCE -> 200 JSON" "$code: $(first_line)" ;;
+  *json*) if [ "$code" = "200" ]; then ok "5. GET /api/$RESOURCE -> 200 JSON: Laravel reached its database"
+          elif [ "$code" = "404" ]; then no "5. GET /api/$RESOURCE -> 200 JSON" "404: $(first_line)  (is $RESOURCE your resource? The second argument is the path under /api/; it defaults to items)"
+          else no "5. GET /api/$RESOURCE -> 200 JSON" "$code: $(first_line)"; fi ;;
   *) no "5. GET /api/$RESOURCE -> 200 JSON" "$code $(ctype): $(first_line)" ;;
 esac
 

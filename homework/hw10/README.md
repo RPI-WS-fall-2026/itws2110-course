@@ -84,8 +84,9 @@ pipeline can deploy without anyone holding a password.
 ## The deploy check
 
 Run it from your team repo's root. The first argument is the address; the second is your
-resource's path under `/api/` (for `/api/reviews`, write `reviews`; if you leave it out, it
-uses `items`):
+resource's path under `/api/`. The commands below use `reviews` as an example: put your own
+(for `/api/reviews`, write `reviews`). If you leave it out, it uses `items`, which is the
+pantry example's resource:
 
 ```bash
 bash ../itws2110-course/homework/hw10/check-deploy.sh http://localhost:8090 reviews
