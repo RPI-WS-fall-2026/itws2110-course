@@ -14,7 +14,8 @@ laptop. Now your team does the same to your project. By the end:
 Expect **two to three hours**, most of it in class. You do not write the new files from
 nothing: [`starter/`](starter/) has the ones you copy, and the pantry example
 ([`project/pantry-example-final`](../../project/pantry-example-final/)) shows each one in a
-finished app.
+finished app. The class walkthrough, step by step, is in
+[the lab slides](../../slides/24_deployment_lab_walkthrough.pdf).
 
 ## What is graded
 
