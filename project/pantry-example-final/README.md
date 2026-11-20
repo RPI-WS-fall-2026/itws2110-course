@@ -158,7 +158,7 @@ project:
 
 | File | What it does |
 |---|---|
-| `packages/hub-auth-laravel/`, `packages/rpi-ui/` | The two shared packages, copied in (also in [`../platform-packages/`](../platform-packages/)) |
+| `packages/hub-auth-laravel/`, `packages/rpi-ui/` | The two shared packages. Copy this `packages/` folder into the root of your repo. |
 | `api/composer.json` | Requires `rpi-platform/hub-auth` from `../packages/hub-auth-laravel` |
 | `api/database/migrations/2026_11_01_000000_add_hub_columns_to_users_table.php` | Published from the package: `hub_id`, `password` nullable |
 | `api/config/app.php` | `'prd' => (bool) env('PRD', false)` |
