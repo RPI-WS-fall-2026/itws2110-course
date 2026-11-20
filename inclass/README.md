@@ -26,4 +26,4 @@ Tuesday in-class exercises are released here, one directory per session.
   ready for strangers (debug off, a health route, a start that keeps the data, trusting the
   proxy), then the app's production image (FrankenPHP,
   PostgreSQL) on your laptop. Tuesday 11/17; the push is participation. Friday 11/20 is team
-  time on [Homework 11](../homework/hw11/README.md), which puts your project on Azure.
+  time on [Homework 10](../homework/hw10/README.md), which puts your project on Azure.

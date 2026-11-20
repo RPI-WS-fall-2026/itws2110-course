@@ -6,7 +6,7 @@
 #   1. no dev packages: PHPUnit and Faker are tools for your laptop, not for a server
 #   2. a real web server, FrankenPHP, in place of `php artisan serve`
 #   3. no .env file: every setting arrives from the environment (docker-compose.prod.yml)
-# Homework 11's Dockerfile is this one plus a first stage that builds your React app.
+# Homework 10's Dockerfile is this one plus a first stage that builds your React app.
 
 # ---- 1. INSTALL. Composer is needed to install the packages, not to run the app, so it
 # stays in this stage. Only the folder it produces is copied into stage 2.

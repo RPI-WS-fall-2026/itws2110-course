@@ -1,0 +1,8 @@
+.env
+node_modules/
+vendor/
+test-results/
+playwright-report/
+.phpunit.cache/
+.DS_Store
+dist/

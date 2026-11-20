@@ -24,7 +24,7 @@ build the app's **production image** and run it the way a server would.
 | — | The production image | nothing: you build it and look |
 | 5–6 | If you finish | a new migration, `pipeline/deploy.yml` |
 
-[Homework 11](../../../homework/hw11/README.md) makes changes 2, 3 and 4 to your team's
+[Homework 10](../../../homework/hw10/README.md) makes changes 2, 3 and 4 to your team's
 project and puts it on Azure, so today is the practice run on a small app.
 
 ## Set up — once, before class

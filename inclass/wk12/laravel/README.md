@@ -5,8 +5,7 @@
 **Not graded: the Check result buttons are your feedback.** Do these after the
 [team lab](../README.md), or while you wait on a teammate. They show Tuesday's ideas work (and
 fail) on a small app before you put them in your team project, and drill 8 writes the same kind
-of policy class Homework 9 asks for. They are also the best warm-up for [Homework 10](../../../homework/hw10_optional_individual/README.md),
-which builds the same app's login yourself.
+of policy class Homework 9 asks for.
 
 It is the to-do app from week 11, with last week's six fixes already in, and a login added:
 register, log in, log out, a list of your own, and an admin page. The login has seven holes,
@@ -219,7 +218,7 @@ As Priya, search for the letter `e`. Alex's to-dos are in the results. In
 
 **Done when:** the check passes.
 **Explain:** drills 6 and 7 are the same mistake in two places. With fifty queries, how would
-you make sure none of them forgets? (Homework 10 asks the same question.)
+you make sure none of them forgets?
 
 ---
 

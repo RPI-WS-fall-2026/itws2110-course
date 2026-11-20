@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => true,   // DRILL 1: someone set this while chasing a bug on their laptop
+    'debug' => (bool) env('APP_DEBUG', false),   // DRILL 1: someone set this while chasing a bug on their laptop
 
     /*
     |--------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 # The pipeline for this to-do app: what GitHub runs after every push to main.
 # It is kept in pipeline/ here so that it is only read, never run. In a real repository this
-# file lives at .github/workflows/deploy.yml -- Homework 11 copies one into your team's.
+# file lives at .github/workflows/deploy.yml -- Homework 10 copies one into your team's.
 #
 # DRILL 6 fixed: `needs` is the gate. deploy does not start until test has succeeded.
 name: deploy

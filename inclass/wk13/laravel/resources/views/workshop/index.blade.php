@@ -22,7 +22,7 @@
         step). 5 and 6 are for anyone who finishes early. Accounts:
         <code>alex@example.edu</code> / <code>password</code>. Commands go in a second terminal,
         in <code>inclass/wk13/laravel</code>, while <code>docker compose watch</code> keeps running
-        in the first. Homework 11 makes changes 2, 3 and 4 to your team's project.</p>
+        in the first. Homework 10 makes changes 2, 3 and 4 to your team's project.</p>
 
     @foreach (collect($drills)->groupBy('group', true) as $group => $items)
         <h2>{{ $group }}</h2>

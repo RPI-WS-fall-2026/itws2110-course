@@ -1,0 +1,26 @@
+{
+    "name": "rpi-platform/hub-auth",
+    "description": "Log a Laravel app in through the RPI Project Platform hub (OAuth 2.0 authorization code + PKCE), and mirror the hub's users and roles locally.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3",
+        "laravel/framework": "^13.0",
+        "laravel/socialite": "^5.31"
+    },
+    "autoload": {
+        "psr-4": {
+            "RpiPlatform\\HubAuth\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RpiPlatform\\HubAuth\\HubAuthServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "version": "0.1.0"
+}

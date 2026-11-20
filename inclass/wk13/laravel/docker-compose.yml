@@ -19,7 +19,7 @@ services:
     ports:
       - "${APP_PORT:-8030}:8000"
     # PRODUCTION'S SETTINGS. This block is the container's environment, and a real environment
-    # variable wins over the same line in .env. In Homework 11, Azure fills in this block for your
+    # variable wins over the same line in .env. In Homework 10, Azure fills in this block for your
     # team's app; nothing here is in the image, so one image runs anywhere.
     environment:
       APP_ENV: production

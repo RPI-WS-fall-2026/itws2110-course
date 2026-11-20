@@ -68,16 +68,16 @@ an account and add the first item. Ctrl+C stops it; the next start still has you
 | [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) | The pipeline: tests, then build in Azure's registry, roll the app, check it |
 | [`api/routes/web.php`](api/routes/web.php) | The fallback route: any path that is not `/api/*` gets the React app |
 | [`api/bootstrap/app.php`](api/bootstrap/app.php) | `trustProxies`: the request arrives through Azure's edge, which holds the certificate |
-| [`api/app/Http/Middleware/SecurityHeaders.php`](api/app/Http/Middleware/SecurityHeaders.php) | Week 11's four headers on every response; HSTS tells browsers to use https here from now on |
+| [`api/app/Http/Middleware/SecurityHeaders.php`](api/app/Http/Middleware/SecurityHeaders.php) | Week 11's four headers on every response, already in your project from Homework 8. HSTS starts to matter here: it tells browsers to use https from now on |
 
 ## Preparing your own project for a production build
 
-The pantry went from `docker compose watch` to a production image with **four new files and
-three changed lines**. Your project needs the same changes. [Homework 11](../../homework/hw11/README.md)
+The pantry went from `docker compose watch` to a production image with **three new files and
+two changed lines**. Your project needs the same changes. [Homework 10](../../homework/hw10/README.md)
 walks through them step by step and has the troubleshooting table; this section is the short
 version, with the reason for each change.
 
-**1. Add four files.** Copy them from this folder (or from `homework/hw11/starter/`), then read
+**1. Add three files.** Copy them from this folder (or from `homework/hw10/starter/`), then read
 the comments in each one.
 
 | File | Goes in | Why |
@@ -85,17 +85,18 @@ the comments in each one.
 | `Dockerfile` | the root, next to `api/` and `web/` | One image: stage 1 builds React, stage 2 installs Laravel without the dev packages, stage 3 runs both with FrankenPHP on port 8080 |
 | `.dockerignore` | the root | Keeps your `.env` (secrets), `vendor/` and `node_modules/` out of the image |
 | `docker-compose.prod.yml` | the root | Runs that image next to PostgreSQL on your laptop, with its settings passed in as Azure passes them |
-| `SecurityHeaders.php` | `api/app/Http/Middleware/` | Week 11's headers, including HSTS |
 
 Your `docker-compose.yml` and `api/Dockerfile` do not change: development keeps working as before.
 
-**2. Change three lines in Laravel.**
+**2. Change two things in Laravel.**
 
 | File | Change | Why |
 |---|---|---|
 | `api/routes/web.php` | Replace the `/` route with the [fallback route](api/routes/web.php) | The React build now sits in `public/`. A refresh on `/items/3` matches no file and no route, so Laravel sends `index.html` and React Router shows the page. Unknown `/api/*` paths still get a JSON 404 |
 | `api/bootstrap/app.php` | `$middleware->trustProxies(at: '*');` inside `withMiddleware` | Azure's edge ends https and forwards plain http. Without this line Laravel thinks the visitor used http: its links say `http://` and the session cookie is not marked Secure |
-| `api/bootstrap/app.php` | `$middleware->append(\App\Http\Middleware\SecurityHeaders::class);` | Sends the headers on every response |
+
+Your security headers are already done: the `SecurityHeaders` middleware and its `append` line
+from Homework 8. Production is where one of them, HSTS, finally does something (check 11).
 
 **3. Check five things that are already right in the pantry, but may not be in your project.**
 
@@ -127,7 +128,7 @@ docker compose -f docker-compose.prod.yml up --build
 Then, in a second terminal (`reviews` is the path of your resource, as in `/api/reviews`):
 
 ```bash
-bash ../itws2110-course/homework/hw11/check-deploy.sh http://localhost:8090 reviews
+bash ../itws2110-course/homework/hw10/check-deploy.sh http://localhost:8090 reviews
 ```
 
 You should see 8 passed, 0 failed, 3 skipped: the three skipped checks need https, so they
@@ -155,7 +156,7 @@ again. The account from the first run still logs in: a start kept the data.
 | A React front end, styled with Tailwind | `web/src/` |
 | Docker: one command | `docker-compose.yml` |
 | Tests at three levels | `api/tests/Unit/`, `web/tests/api/`, `web/tests/e2e/` |
-| Deployed at a public URL | Not in this example. Homework 11 does this (started Fri 11/20) |
+| Deployed at a public URL | Not in this example. Homework 10 does this (started Fri 11/20) |
 
 ## Where each part comes from
 
@@ -175,7 +176,7 @@ again. The account from the first run still logs in: a start kept the data.
 | Log in and roles | `AuthController.php`, `api/app/Policies/ItemPolicy.php` | Authentication and policies (Fri 10/30), HW8 |
 | Limit on log-in tries | `api/app/Providers/AppServiceProvider.php` | Security (Tue 11/3), HW9 |
 | JSON responses, Sanctum log in | `api/app/Http/Resources/`, `api/bootstrap/app.php` | APIs (Tue 11/10) |
-| React talking to Laravel | `web/src/api.js`, `web/vite.config.js` | API lab (Fri 11/13), HW10 |
+| React talking to Laravel | `web/src/api.js`, `web/vite.config.js` | API lab (Fri 11/13), HW 9 |
 | API tests and browser tests | `web/tests/api/`, `web/tests/e2e/` | Week 3 Pantry (Parts 3 and 4), HW2 |
 
 ## Beyond the minimum

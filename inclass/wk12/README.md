@@ -18,8 +18,7 @@ docker compose exec app php artisan route:list --path=api
 **Then, the login drills.** When your team's check passes (or while you wait on a teammate),
 work through [the login drills](laravel/README.md): they break and fix each idea from Tuesday on
 the week 11 to-do app, with a Check result button for each, and drill 8 writes a **policy**,
-the same kind of class Homework 9 asks for. They are also the warm-up for the optional
-[Homework 10](../../homework/hw10_optional_individual/README.md).
+the same kind of class Homework 9 asks for.
 
 **To read beside your project: the starter kit, running.** [`react-starter/`](react-starter/README.md)
 is the Laravel React starter kit from Friday's slides (one app, Inertia), with the Students

@@ -1,0 +1,103 @@
+# The pipeline: a push to main is tested, and only if the tests pass is it deployed.
+# This file goes in .github/workflows/ in your team repository.
+#
+#   git push  ->  php, web (the gate)  ->  deploy (build in Azure, roll the app, check it)
+#
+# Nothing here is a password. The three AZURE_* secrets are ids; the instructor put them,
+# and the four LAB_* variables, in your repository's settings before class.
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # the "Run workflow" button on the Actions page
+
+# One deploy at a time: a second push waits for the first to finish.
+concurrency: deploy
+
+jobs:
+  # ---- THE GATE, part 1: the API's own tests (sqlite in memory; no containers needed)
+  php:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with: { php-version: "8.4", extensions: "pdo_sqlite" }
+      - run: composer install --no-interaction --prefer-dist
+        working-directory: api
+      - run: cp -n .env.example .env && php artisan key:generate --force && php artisan test
+        working-directory: api
+
+  # ---- THE GATE, part 2: the React app builds
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - run: npm install --no-audit --no-fund && npx vite build
+        working-directory: web
+
+  # ---- THE DEPLOY
+  deploy:
+    # `needs` is the gate. GitHub does not start this job until php AND web succeeded.
+    # A red test means this job is skipped and the running site does not change.
+    needs: [php, web]
+    runs-on: ubuntu-latest
+    # The environment is what Azure trusts: "this repository's `lab` environment".
+    environment:
+      name: lab
+      url: ${{ vars.LAB_URL }}
+    # Lets GitHub mint the short-lived token that the login step shows to Azure.
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      RG: ${{ vars.LAB_RESOURCE_GROUP }}
+      ACR: ${{ vars.LAB_ACR }}
+      APP: ${{ vars.LAB_APP }}
+      URL: ${{ vars.LAB_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # 1. Log in to Azure with a token GitHub signs for this run. No stored password.
+      - name: Log in to Azure (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # 2. BUILD. Azure's registry builds your root Dockerfile and keeps the image, named
+      #    after the commit it was built from. "Which code is running?" always has an answer.
+      - name: Build the image in the registry
+        run: az acr build -r "$ACR" -t "$APP:${{ github.sha }}" .
+
+      # 3. SHIP + RUN. A new revision of your Container App from that image. The old
+      #    revision keeps serving until the new one answers its health check.
+      - name: Roll the app to the new image
+        run: |
+          az containerapp update -g "$RG" -n "$APP" \
+            --image "$ACR.azurecr.io/$APP:${{ github.sha }}" \
+            --revision-suffix "g$(echo ${{ github.sha }} | cut -c1-7)-r${{ github.run_number }}" -o none
+
+      # 4. CHECK. The tests cannot see a missing production setting. This can.
+      - name: Smoke check
+        run: |
+          echo "checking $URL/up (a start takes 10 to 40 seconds)"
+          for i in $(seq 1 24); do
+            if [ "$(curl -s -o /dev/null -w '%{http_code}' "$URL/up")" = "200" ]; then ok=1; break; fi
+            sleep 5
+          done
+          [ -n "${ok:-}" ] || { echo "::error::$URL/up did not answer 200 within two minutes"; exit 1; }
+          RUNNING="$(az containerapp show -g "$RG" -n "$APP" --query 'properties.template.containers[0].image' -o tsv)"
+          echo "### Deployed" >> "$GITHUB_STEP_SUMMARY"
+          echo "$URL is running \`${RUNNING##*/}\`" >> "$GITHUB_STEP_SUMMARY"
+
+      # 5. When it fails, print what the container said: the reason is almost always there.
+      - name: What the container said (on failure)
+        if: failure()
+        run: |
+          az containerapp revision list -g "$RG" -n "$APP" -o table || true
+          az containerapp logs show -g "$RG" -n "$APP" --type console --tail 80 --follow false || true
+          az containerapp logs show -g "$RG" -n "$APP" --type system --tail 30 --follow false || true

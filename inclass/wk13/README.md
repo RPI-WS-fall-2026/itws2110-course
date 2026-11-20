@@ -5,7 +5,7 @@
 | Day | What | Counts as |
 |---|---|---|
 | **Tue 11/17** | [A front end in a bucket](bucket/README.md): shown live, five minutes. Then [the deploy drills](laravel/README.md): four changes that get the to-do app ready for strangers, then its production image on your laptop. | participation: push your copy to your own repository |
-| **Fri 11/20** | Team work time on [Homework 11](../../homework/hw11/README.md): your project's production image, then your project on Azure. Aim to finish Part A and see your first green deploy before you leave. | Homework 11, due Fri 12/4 |
+| **Fri 11/20** | Team work time on [Homework 10](../../homework/hw10/README.md): your project's production image, then your project on Azure. Aim to finish Part A and see your first green deploy before you leave. | Homework 10, due Tue 12/8 |
 
 **Before Tuesday**, so the slow downloads are done:
 

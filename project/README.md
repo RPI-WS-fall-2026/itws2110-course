@@ -24,10 +24,10 @@ permissions as applicable to its users and workflows.
 | **User management** | Register, log in, log out. Two roles: an ordinary user and an admin. A user can edit their own profile; an admin can see all users. | HW 7–8 (Laravel auth) |
 | **One core resource** | The thing your app is about — a listing, a review, a post, a booking, a question. One database table, plus the relationships it needs (it belongs to a user, at least). | HW 6–7 (Eloquent) |
 | **A JSON API for that resource** | Five endpoints: list, show, create, update, delete. Create/update/delete require login; delete and editing someone else's require admin. Documented. | HW 9–10 (APIs) |
-| **A React front end** that uses the API | The pages a person needs: browse, see one, create, edit their own, log in. Responsive. | HW 3–5, HW 10 |
+| **A React front end** that uses the API | The pages a person needs: browse, see one, create, edit their own, log in. Responsive. | HW 3–5, HW 9 |
 | **Runs in Docker** | One `docker-compose.yml` at the root of the repo. `docker compose watch` brings up the API, the front end and the database on a fresh clone with nothing installed but Docker. The database seeds itself. | HW 1 |
 | **Tests at three levels** | PHPUnit unit tests on the rules · Playwright API tests on all five endpoints, including the error cases · Playwright browser tests on the two most important pages. Each suite is a `docker compose run --rm` service, like Pantry and Grocy. | HW 2, HW 5 |
-| **Deployed** | Running at a public URL, from `main`, with a deploy your team can repeat. | HW 10–11 |
+| **Deployed** | Running at a public URL, from `main`, with a deploy your team can repeat. | HW 10 |
 
 That is the minimum. It should be done, tested and deployed by the week-13 lab (11/20).
 
@@ -105,7 +105,7 @@ Four deliverables, each on a day the course is already doing something related.
 | **Wed 12/16** (exam period) | **Final report** | `REPORT.md`, a six-to-eight page paper: the system, the decisions, the evidence, the process | 35% |
 
 Between deliverables the work is the homework: HW 3–5 produce the front end, HW 6–8 the
-back end and auth, HW 9–10 the API and the wiring, HW 11 the deployment. The project is
+back end and auth, HW 9 the API and the wiring, HW 10 the deployment. The project is
 where those pieces are pointed at your idea instead of at the assignment's example. The
 minimum should be in place by the week-13 lab; weeks 13–15 are for what goes beyond it
 and for the paper.

@@ -6,7 +6,7 @@
 |---|---|---|
 | Lecture: logging in, sessions vs. tokens, OAuth, SSO | Tue 11/10 (session 21) | the deck |
 | The team login lab | Fri 11/13 | the main event: [`../README.md`](../README.md) |
-| These drills | Fri 11/13, after the team lab | each idea from Tuesday on a small app; drill 8 is the policy practice for Homework 9, and all eight are the warm-up for Homework 10 |
+| These drills | Fri 11/13, after the team lab | each idea from Tuesday on a small app; drill 8 is the policy practice for Homework 9 |
 
 The drills are ungraded (the Check result buttons are the feedback). Students do them after
 the team lab, or while waiting on a teammate. Two good ways to use class time: demo drills 3 and
@@ -38,7 +38,7 @@ it is the moment a scope stops being enough.
 | 4 | `attack delete 2` with no login deletes a to-do | move the route into the `auth` group | A01 Broken Access Control: hiding a button is not a check |
 | 5 | register with an extra `role=admin` field | create from `validate()`; `role` off `#[Fillable]` | A01 (mass assignment) |
 | 6 | Priya opens `/todos/2`, Alex's | `$request->user()->todos()->findOrFail($id)` | A01 (IDOR): logged in ≠ allowed; 404 for private data |
-| 7 | Priya's search returns Alex's to-dos | start the search from the user | A01: every query must be scoped (why HW 10 asks for a global scope) |
+| 7 | Priya's search returns Alex's to-dos | start the search from the user | A01: every query must be scoped (the case for a global scope) |
 | 8 | after drill 6, the admin clicks a to-do on `/admin` and gets 404; the new rule (admin may view and delete, not update) cannot be written as a query | `TodoPolicy` with `view`/`update`/`delete` returning `allow`, `deny` (403) or `denyAsNotFound` (404); `findTodo()` does `Todo::findOrFail` + `Gate::authorize($ability, $todo)` | A01: one place for the rule, deny by default; policies judge one record, scopes filter lists |
 
 ## Two design notes worth knowing
@@ -51,7 +51,7 @@ it is the moment a scope stops being enough.
 - **Drill 6 answers 404, the team project's policy answers 403.** Both are right, for different
   data: the to-do list is private (don't confirm an id exists), a team's reviews are public
   (the reader can see it exists; only the owner may edit). Saying this out loud connects the
-  drill to HW 9's policy and to HW 10's per-user lists.
+  drill to HW 9's policy.
 - **Drill 8 uses both answers in one policy.** Priya gets `denyAsNotFound()` (404, so drill 6's
   check still passes after drill 8 replaces its fix); the admin gets `deny()` (403) on update,
   because the admin can already see the to-do on `/admin`. It also deliberately avoids

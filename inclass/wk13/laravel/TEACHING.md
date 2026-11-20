@@ -7,9 +7,9 @@ production image (about 15), on the to-do app from weeks 11 and 12; drills 5 and
 anyone who finishes. **Not graded:** the push to their own repository is participation. There
 are no Check result buttons and no tests in the student copy (removed 11/16); each drill's
 "Done when" names what they see. The tests are in
-`itws2110-instructor/solutions/wk13` (a solved copy on port 9030; `bash check.sh starter`). Homework 11 (team, due Fri 12/4) makes changes 2, 3 and
+`itws2110-instructor/solutions/wk13` (a solved copy on port 9030; `bash check.sh starter`). Homework 10 (team, due Tue 12/8) makes changes 2, 3 and
 4 again on the team projects and deploys them, so this is the first of two cases of the same
-ideas. Friday 11/20 is team work time on Homework 11.
+ideas. Friday 11/20 is team work time on Homework 10.
 
 ## Where each drill falls in the lecture
 
@@ -49,9 +49,9 @@ will wait a few minutes, so start that step while you lecture on Part 2.
 | Drill | See it break | Change | The idea |
 |---|---|---|---|
 | 1 | `/boom` shows the debug page although `printenv APP_DEBUG` says `false` | `env('APP_DEBUG', false)` in `config/app.php` | settings live in the environment; default to safe (12-factor III) |
-| 2 | `/up` is 404 | `health: '/up'` | the platform asks before it sends visitors (Homework 11's check 1) |
+| 2 | `/up` is 404 | `health: '/up'` | the platform asks before it sends visitors (Homework 10's check 1) |
 | 3 | add a to-do, `docker compose restart app`, gone | `migrate --force` in `start.sh` | a start is not a reset; rows live outside the container |
-| 4 | the curl line with `X-Forwarded-*` headers still reports http | `trustProxies(at: '*')` | TLS ends at the edge; the app must be told (Homework 11's checks 8 and 9) |
+| 4 | the curl line with `X-Forwarded-*` headers still reports http | `trustProxies(at: '*')` | TLS ends at the edge; the app must be told (Homework 10's checks 8 and 9) |
 | image | `Dockerfile.prod` built from their files, run on 8035 | nothing | one image, settings from outside, FrankenPHP in place of `artisan serve`, data kept across a restart |
 | 5 (optional) | Sort by priority: 500; the log says *Unknown column* | a new migration with `Schema::table` and a default | the database moves forward one migration at a time; read the log |
 | 6 (optional) | prediction: a red test still deploys | `needs: [test]` | the gate is one line |
@@ -70,5 +70,5 @@ will wait a few minutes, so start that step while you lecture on Part 2.
   brings the three accounts back.
 - **Drill 4's curl runs inside the container** so it works the same in every shell; that is
   why the host reads `localhost:8000`, not `8030`.
-- HSTS is not a drill here: week 11's `SecurityHeaders` already sends it, and Homework 11's
+- HSTS is not a drill here: week 11's `SecurityHeaders` already sends it, and Homework 10's
   check 11 is where it finally means something.

@@ -1,0 +1,14 @@
+# The front end, for `docker compose watch`. Debian-based, like the course workshops.
+# node_modules is installed here, inside the image, so nobody needs Node on a laptop.
+#
+# PLATFORM: built from the REPOSITORY ROOT (docker-compose.yml: context: .). package.json
+# says "file:../packages/rpi-ui", so the image keeps the repository's layout under /app:
+# /app/web and /app/packages/rpi-ui.
+FROM node:22-bookworm-slim
+WORKDIR /app/web
+COPY packages/rpi-ui /app/packages/rpi-ui
+COPY web/package.json web/package-lock.json ./
+RUN npm ci
+COPY web .
+EXPOSE 5173
+CMD ["npx", "vite", "--host", "0.0.0.0", "--port", "5173"]

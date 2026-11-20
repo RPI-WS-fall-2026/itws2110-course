@@ -74,7 +74,7 @@ class WorkshopController extends Controller
             'goal' => "A search finds only your own to-dos.",
             'owasp' => 'A01:2025 Broken Access Control',
             'attack' => "Logged in as Priya, search for the letter e. Her two to-dos are there -- and so are Alex's four. The list was scoped to the login; the search, added later, starts from Todo:: and searches everyone's.",
-            'idea' => "Drill 6's idea in a second place. Every query that reads to-dos must start from the user, and it is easy to forget one. That is why apps with many users' data in one table (multi-tenant apps) often add the user_id condition to every query automatically -- a global scope. Homework 10 asks for exactly this list, built by you.",
+            'idea' => "Drill 6's idea in a second place. Every query that reads to-dos must start from the user, and it is easy to forget one. That is why apps with many users' data in one table (multi-tenant apps) often add the user_id condition to every query automatically -- a global scope.",
             'hint' => "In index(), start the search from the user, like the list:\n    \$todos = \$request->user()->todos()->where('title', 'like', \"%\$q%\")->orderBy('title')->get();",
         ],
         8 => [

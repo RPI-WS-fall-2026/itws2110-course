@@ -24,9 +24,9 @@ class WorkshopController extends Controller
             'group' => 'A copy that strangers use', 'title' => 'Nobody can ask the app whether it is ready', 'open' => '/up',
             'file' => 'bootstrap/app.php · withRouting()',
             'goal' => 'GET /up answers 200 once the app has started.',
-            'tag' => "Health checks · Homework 11's check 1",
+            'tag' => "Health checks · Homework 10's check 1",
             'attack' => "Open /up: 404. On Azure, a deploy starts a new copy of your app beside the old one, and Azure has to decide when visitors may be sent to the new copy. It asks the new copy a question. This app has no answer, so a platform cannot tell a copy that started from one that crashed on its first line.",
-            'idea' => "A health route answers 200 only if the app booted: PHP started, the configuration loaded, the framework is up. The platform keeps the old copy serving until the new one answers, so a copy that cannot start never meets a visitor. In Homework 11 the last step of your team's pipeline asks /up as well, and marks the deploy failed if nothing answers within two minutes.",
+            'idea' => "A health route answers 200 only if the app booted: PHP started, the configuration loaded, the framework is up. The platform keeps the old copy serving until the new one answers, so a copy that cannot start never meets a visitor. In Homework 10 the last step of your team's pipeline asks /up as well, and marks the deploy failed if nothing answers within two minutes.",
             'hint' => "In bootstrap/app.php, inside withRouting( ... ), add a third line:\n\n    health: '/up',\n\nSave and reload /up: \"Application up\".",
         ],
         3 => [
@@ -42,10 +42,10 @@ class WorkshopController extends Controller
             'group' => 'Behind the proxy', 'title' => 'The app does not know it is on https', 'open' => '/request',
             'file' => 'bootstrap/app.php · withMiddleware()',
             'goal' => 'A request that reached the proxy over https counts as https in the app: the links and redirects it writes start with https://.',
-            'tag' => "TLS termination · Homework 11's checks 8 and 9",
+            'tag' => "TLS termination · Homework 10's checks 8 and 9",
             'attack' => "On Azure the browser speaks https to Azure's edge, a proxy. The edge holds the certificate, decrypts the request, and hands it to your container as plain http, adding headers that say how it really arrived. Send a request the way the edge would (second terminal, one line):\n\n    docker compose exec app curl -s -H \"X-Forwarded-Proto: https\" -H \"X-Forwarded-Host: todo.example.edu\" http://localhost:8000/request\n\n/request prints what the app believes. It says scheme http, host localhost:8000, and a link that starts http://. It ignored both headers, so every redirect it sends (after a login, say) would send the browser to http://.",
             'idea' => "It ignores them for a good reason: anyone can type a header. An app that visitors reach directly must not believe a stranger who claims to have arrived over https, or from someone else's address. Your container on Azure is different: only the edge can reach it, so those headers can only be the edge's. trustProxies says so to Laravel. Then \$request->isSecure() is true, url() and redirect() write https://, the session cookie's Secure flag is honoured, and \$request->ip() is the visitor's address, not the proxy's.",
-            'hint' => "In bootstrap/app.php, inside withMiddleware, add:\n\n    \$middleware->trustProxies(at: '*');\n\nRun the curl line again: scheme https, host todo.example.edu, and the link starts https://todo.example.edu. In Homework 11 you add this same line to your team's api/.",
+            'hint' => "In bootstrap/app.php, inside withMiddleware, add:\n\n    \$middleware->trustProxies(at: '*');\n\nRun the curl line again: scheme https, host todo.example.edu, and the link starts https://todo.example.edu. In Homework 10 you add this same line to your team's api/.",
         ],
         5 => [
             'group' => 'If you finish: a new column', 'title' => 'A new column, without emptying the table', 'open' => '/todos?sort=priority',
@@ -62,7 +62,7 @@ class WorkshopController extends Controller
             'goal' => 'The deploy job waits for the test job, and is skipped when a test fails.',
             'tag' => 'CI/CD · the gate',
             'attack' => "Open pipeline/deploy.yml. It has two jobs, test and deploy. Predict before you read on: a push breaks a test. What happens to the live site?\n\nGitHub starts every job in a workflow at the same moment unless one says it depends on another. test goes red after a minute. deploy never looked at it, and has already put the broken code in front of users. The tests ran, and protected nothing.",
-            'idea' => "needs: turns two jobs that run side by side into a line: deploy does not start until test has finished, and is skipped if test failed. A skipped deploy changes nothing, so the site keeps running the last good version. That one line is the whole \"gate\" in a deployment pipeline. Homework 11's file has it too: needs: [php, web].",
+            'idea' => "needs: turns two jobs that run side by side into a line: deploy does not start until test has finished, and is skipped if test failed. A skipped deploy changes nothing, so the site keeps running the last good version. That one line is the whole \"gate\" in a deployment pipeline. Homework 10's file has it too: needs: [php, web].",
             'hint' => "Under deploy: add one line, indented like runs-on:\n\n      deploy:\n        needs: [test]\n        runs-on: ubuntu-latest",
         ],
     ];
