@@ -51,7 +51,7 @@ will wait a few minutes, so start that step while you lecture on Part 2.
 | 1 | `/boom` shows the debug page although `printenv APP_DEBUG` says `false` | `env('APP_DEBUG', false)` in `config/app.php` | settings live in the environment; default to safe (12-factor III) |
 | 2 | `/up` is 404 | `health: '/up'` | the platform asks before it sends visitors (Homework 10's check 1) |
 | 3 | add a to-do, `docker compose restart app`, gone | `migrate --force` in `start.sh` | a start is not a reset; rows live outside the container |
-| 4 | the curl line with `X-Forwarded-*` headers still reports http | `trustProxies(at: '*')` | TLS ends at the edge; the app must be told (Homework 10's checks 8 and 9) |
+| 4 | the curl line with `X-Forwarded-*` headers still reports http | `trustProxies(at: '*')` | TLS ends at the edge; the app must be told (Homework 10, step 3) |
 | image | `Dockerfile.prod` built from their files, run on 8035 | nothing | one image, settings from outside, FrankenPHP in place of `artisan serve`, data kept across a restart |
 | 5 (optional) | Sort by priority: 500; the log says *Unknown column* | a new migration with `Schema::table` and a default | the database moves forward one migration at a time; read the log |
 | 6 (optional) | prediction: a red test still deploys | `needs: [test]` | the gate is one line |

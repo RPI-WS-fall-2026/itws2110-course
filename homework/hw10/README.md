@@ -24,16 +24,16 @@ finished app.
 | 2 | **A push deploys it** | 7–8 | `.github/workflows/deploy.yml` is in your repo, and the latest **deploy** run on `main` is green |
 | 3 | **It works for strangers** | 9–10 | The deploy check against your Azure address says **11 passed** |
 | 4 | **`README.md` says where it is** | 10 | Your Azure address and your last deploy-check output ([example](#what-to-put-in-readmemd)) |
-| 5 | **It is submitted on the hub** | 11 | One submission for the team, every teammate's RPI email on it, your repo and `main`. Hub checks 1, 2, 5, 6, 7 and 8 green |
+| 5 | **It is submitted on the hub** | 11 | One submission for the team, every teammate's RPI email on it, your repo and `main`. Every hub check that must pass is green, except the two for the hub login ([which](#the-hub-submission)) |
 
 After the due date the grader runs the deploy check against the address in your `README.md`,
 looks at your repo's **Actions** tab, and opens your submission on the hub. You can run both
 checks yourself as often as you like: they are the same ones.
 
-**Two different checks, two numberings.** The *deploy check* is a script, `check-deploy.sh`,
-with checks 1–11 ([below](#the-deploy-check)). The *hub check* is what
-ta.biggermatrix.com shows on your submission, with its own checks 1–14
-([below](#the-hub-submission)). This page always says which one it means.
+**Two different checks.** The *deploy check* is a script, `check-deploy.sh`, with numbered
+checks 1–11 ([below](#the-deploy-check)); "deploy check 7" on this page means its seventh. The
+*hub check* is the list ta.biggermatrix.com shows on your submission; its lines have names,
+not numbers ([below](#the-hub-submission)).
 
 ## Before you start
 
@@ -64,7 +64,7 @@ someone does step 11. Everyone watches the pipeline run.
 | | **Part A — the production image, on your laptop** | |
 | 1 | the root of your repo | Copy three files from [`starter/`](starter/) next to `api/` and `web/`: `Dockerfile`, `.dockerignore` and `docker-compose.prod.yml`. |
 | 2 | `api/routes/web.php` | Replace the `/` route with the fallback route from the example's [`web.php`](../../project/pantry-example-final/api/routes/web.php). It sends every path that is not `/api/*` to the React app, so a link like `/reviews/3` works when someone opens it directly. |
-| 3 | `api/bootstrap/app.php` | Inside `withMiddleware`, under `statefulApi()`, add one line: `$middleware->trustProxies(at: '*');` (Tuesday's drill 4). Azure's proxy speaks https to the browser and plain http to your container; this line lets Laravel believe the proxy, so cookies are marked `Secure`. Your Homework 8 `SecurityHeaders` line is already in this file; leave it. |
+| 3 | `api/bootstrap/app.php` | Inside `withMiddleware`, under `statefulApi()`, add one line: `$middleware->trustProxies(at: '*');` (Tuesday's drill 4). Azure's proxy speaks https to the browser and plain http to your container, and adds headers saying how the visitor really arrived. This line tells Laravel to believe them: links and redirects then start with `https://`, and each visitor counts as their own address (so a login rate limit is per visitor, not one limit for everyone behind the proxy). Your Homework 8 `SecurityHeaders` line is already in this file; leave it. |
 | 4 | a terminal | `docker compose -f docker-compose.prod.yml up --build`, then open http://localhost:8090. One container serves both your pages and your API. The database starts empty: register an account and add one row of your resource. |
 | 5 | a second terminal | Run the [deploy check](#the-deploy-check) against `http://localhost:8090`. Expect **8 passed, 0 failed, 3 skipped** (checks 9–11 need https). |
 | 6 | the first terminal | Ctrl+C, then `docker compose -f docker-compose.prod.yml up` again (no `--build`), and run the deploy check again. Expect **9 passed, 2 skipped**: check 10 now passes, because the account from the first run survived a restart. |
@@ -74,7 +74,7 @@ someone does step 11. Everyone watches the pipeline run.
 | 9 | a terminal | Run the deploy check against your `https://` address. Expect **10 passed, 1 skipped**. |
 | 10 | any page in `web/src` | Change a word a visitor can see. Commit, push, wait for the pipeline, reload your address. Run the deploy check a third time: **11 passed**. Your data survived a deploy. Paste this output into `README.md` ([how](#what-to-put-in-readmemd)). |
 | | **Part C — on the course platform** | |
-| 11 | https://ta.biggermatrix.com | One teammate logs in with their RPI account and presses **Submit a project**, filled in as in [the table below](#the-hub-submission). The hub reads `main` on GitHub and shows its checks. Fix any red must-pass check except 3 and 4, push, and press **Check again**. |
+| 11 | https://ta.biggermatrix.com | One teammate logs in with their RPI account and presses **Submit a project**, filled in as in [the table below](#the-hub-submission). The hub reads `main` on GitHub and lists its checks. Fix any line marked **must be fixed**, except the two for the hub login, push, and press **Check again**. |
 
 You do not set up Azure yourself. The instructor has already made your team's Azure app and
 put the `AZURE_*` secrets and `LAB_*` variables in your repository's settings, so the
@@ -120,7 +120,7 @@ PASS  11. Strict-Transport-Security: max-age=31536000; includeSubDomains: browse
 | 5 | The settings reached the container as environment variables | Tue 11/17, "what is different about this container" |
 | 6 | `APP_DEBUG=false`: an error tells a stranger nothing about your code | Tue 11/17, drill 1 |
 | 7, 8 | Register, log in, and stay logged in at the deployed address | Homework 9 |
-| 9 | Azure only: the cookie is `Secure`, because Laravel knows the visitor used https | Tue 11/17, drill 4 |
+| 9 | Azure only: the session cookie is `Secure` (your Azure app has `SESSION_SECURE_COOKIE=true`) | Tue 11/17, https |
 | 10 | Second run onward: the account from the last run is still there | Tue 11/17, drill 3 |
 | 11 | Azure only: browsers are told to use https here for the next year (HSTS) | Homework 8's headers |
 
@@ -150,31 +150,41 @@ part of that. **One teammate submits for the whole team** and fills in:
 
 | Field | What to put |
 |---|---|
-| Course | ITWS 2110, Fall 2026 |
-| Name, slug, tagline, description, team | Your project, as you want it on the showcase. The slug is the short name used in its address (for example `study-rooms`). |
+| Course | ITWS 2110, this semester |
+| Project name, Slug, Tagline, Description, Team | Your project, as you want it on the showcase. The slug is the short name used in its address (for example `study-rooms`). |
+| Audience | Who the app is for |
 | Teammates' emails | Each teammate's RPI email, one per line. Everyone listed sees the submission and its checks under **My submissions**. |
-| Authentication | **RPI login** |
-| Stack | Laravel + React |
-| Repository, branch, folders | Your team repo, `main`, `api/` and `web/` |
+| Authentication | **RPI login through the hub** |
+| Data sensitivity | **Internal: platform accounts, no protected records**, unless your app holds grades or other education records (then FERPA, and talk to the instructor) |
+| Stack | **Laravel + React (PostgreSQL)** |
+| GitHub repository, Branch to deploy | Your team repo's address, and `main` |
+| Laravel folder, React folder | `api`, `web` |
+| Contact email | Where the instructor's questions should go |
 
-The hub then runs fourteen checks on `main`. Eight must pass; the other six are advice. The
-eight, and which ones this homework grades:
+The hub then reads `main` and lists its checks by name, on your submission's page. These
+nine are marked **must be fixed** when they fail; the rest are **advice**. Which ones this
+homework grades:
 
-| Hub check | Must pass | Graded in HW 10 |
+| Hub check (as the hub names it) | What it looks for | Graded in HW 10 |
 |---|---|---|
-| 1 | The repository and branch exist, and the hub can read them | yes |
-| 2 | A Laravel app in `api/` | yes |
-| 3 | `api/composer.json` requires `rpi-platform/hub-auth`, and `packages/hub-auth-laravel/` is in the repo | no — later |
-| 4 | `api/.env.example` lists `HUB_URL`, `HUB_CLIENT_ID`, `HUB_CLIENT_SECRET` and `DB_CONNECTION=pgsql` | no — later |
-| 5 | No `api/.env` committed | yes |
-| 6 | `web/package.json` has a `build` script | yes |
-| 7 | A `Dockerfile` at the root that listens on 8080 and copies `api/` and `web/` | yes — step 1 |
-| 8 | `api/composer.lock` and `web/package-lock.json` are committed | yes |
+| Repository is on GitHub | The address is a GitHub repository | yes |
+| Repository and branch exist | The hub can read your repository and `main` | yes |
+| Laravel app in api/ | `api/composer.json` requires `laravel/framework` | yes |
+| Logs in through the hub (rpi-platform/hub-auth) | `api/composer.json` requires the hub login package, and `packages/hub-auth-laravel/` is in the repo | no — later |
+| api/.env.example lists the platform settings | `HUB_URL`, `HUB_CLIENT_ID`, `HUB_CLIENT_SECRET` and `DB_CONNECTION=pgsql` | no — later |
+| No .env committed | `api/.env` is not in the repository | yes |
+| React app in web/ | `web/package.json` has a `build` script | yes |
+| Production Dockerfile at the repository root | A root `Dockerfile` that listens on 8080 | yes — step 1 |
+| Lock files committed | `api/composer.lock` and `web/package-lock.json` | yes |
 
-Hub checks 3 and 4 are for RPI login through the hub, which your team adds before the project
-goes on the showcase; the pantry example's
+The two marked *later* are the RPI login through the hub, which your team adds before the
+project goes on the showcase; the pantry example's
 [`PRD` switch](../../project/pantry-example-final/README.md#logging-in-on-the-course-platform-the-prd-switch)
-shows that change. They are not part of this homework, so expect them to stay red.
+shows that change. They are not part of this homework, so expect them to stay red, and your
+submission to show as not ready, until then.
+
+The advice lines are not graded. One of them, **API routes**, will stay amber: it points
+out your `/login` and `/register` routes, which you keep.
 
 Red checks do not stop you submitting. Fix, push, and press **Check again**: the hub reads
 `main` on GitHub each time. The person who submitted can edit the submission at any time,
@@ -213,11 +223,14 @@ your address still shows the last good version. Put the assertion back and push 
 | Deploy check 6 says APP_DEBUG is true | The line from the row above is still there. Take it out. |
 | Deploy check 7 gets 419, or check 8 gets 401 | Run the check with exactly the address in `SANCTUM_STATEFUL_DOMAINS`: `http://localhost:8090`, not `127.0.0.1`. |
 | Deploy check 7 gets 500 `relation "sessions" does not exist` | Your migrations have no `sessions` table. Add one: `docker compose exec app php artisan make:session-table`, then commit the new migration. |
+| Deploy check 9 fails: a cookie is not Secure | Your `api/config/session.php` sets `'secure'` to something other than `env('SESSION_SECURE_COOKIE')`: put that back. If it already says that, tell the instructor. |
+| Deploy check 10 fails on your very first run | The script remembers the account it made at each address, in a file named after the address. Another app answered at the same address before (for example the pantry example on `localhost:8090`). Delete that file and run the check again: `rm "${TMPDIR:-/tmp}"/check-deploy-http___localhost_8090.txt`. |
+| Deploy check 10 fails after you ran `down -v` | Expected: `-v` threw the database away, so last run's account is gone. The failing run made a new account, so the next run passes check 10. |
 | Deploy check 11 fails: `no such header` | Your Homework 8 middleware is missing or not switched on. See [Homework 8, section 1](../hw8/README.md#1-security-headers--drill-6): `api/app/Http/Middleware/SecurityHeaders.php`, and `$middleware->append(...)` in `bootstrap/app.php`. |
 | A page is blank in the production image, but not under `docker compose watch` | Your `Content-Security-Policy` from Homework 8 blocked something. The browser console names it: usually a file your page loads from another site. Add that origin to the policy, or serve the file yourself. |
-| Step 8: `php` is red | A test fails on a clean machine. `docker compose run --rm unit` shows the same failure on yours. Fix the test or the code; do not delete the job. |
+| Step 8: `php` is red | A test fails on a clean machine. The job runs `php artisan test`; `docker compose exec app php artisan test` runs the same tests on yours. Fix the test or the code; do not delete the job. |
 | Step 8: the login step fails with `AADSTS700213` or `No matching federated identity record` | The workflow is not running from `main`, or the job lost its `environment: lab` line. Azure trusts exactly that pair. |
 | Step 8: the smoke check fails | The job's last step printed what your container said. A migration error means the PostgreSQL row above. Your address still shows the previous version: a revision that never answers `/up` never gets traffic. |
 | Step 9: the first request takes half a minute | The app had scaled to zero. The check waits for it. |
-| Step 11: hub check 1 says *no such repository* | Check the repository and branch names on your submission. If they are right, the repository is private where the hub cannot read it: tell the instructor. |
+| Step 11: *Repository and branch exist* fails | Check the repository address and the branch on your submission. If both are right, the repository is private and the hub cannot read it: tell the instructor. |
 | Step 11: a hub check is red although you fixed it | The hub reads `main` on GitHub, not your laptop. Push, then press **Check again**. |
